@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AlumniHub</string>
+    <string name="get_started">Get Started</string>
+    <string name="alumni_hub">AlumniHub</string>
+    <string name="description_splash">Join the largest Alumni networking community</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="create_account">Create Account</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="submit">Submit</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_email">Enter Your Email</string>
+    <string name="login">Login</string>
+</resources>
