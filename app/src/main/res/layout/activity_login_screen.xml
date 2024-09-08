@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@color/bgSplashScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.LoginScreen">
@@ -13,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="@string/welcome_back"
-        android:textSize="34sp"
+        android:textColor="@color/darkBlue"
+        android:textSize="37sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,6 +26,7 @@
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@drawable/bg_login"
         android:orientation="vertical"
         android:padding="20dp"
         android:layout_marginTop="40dp"
@@ -33,14 +36,16 @@
         app:layout_constraintTop_toBottomOf="@id/WelcomeBackText"
         app:layout_constraintVertical_bias="0.331">
 
-        <!-- Login Text -->
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/connectMsgTxt"
+            android:layout_width="292dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
-            android:text="@string/login"
-            android:textSize="18sp"
+            android:gravity="center"
+            android:text="@string/connectMsg"
+            android:textColor="@color/darkBlue"
+            android:textSize="27sp"
             android:textStyle="bold" />
 
         <EditText
@@ -49,8 +54,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:hint="@string/enter_email"
+            android:background="@drawable/textfields_background"
             android:inputType="textEmailAddress"
             android:padding="12dp"
+            android:layout_marginTop="16dp"
             android:textColorHint="@android:color/darker_gray" />
 
         <EditText
@@ -58,7 +65,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:layout_marginTop="12dp"
             android:hint="@string/enter_password"
+            android:background="@drawable/textfields_background"
             android:inputType="textPassword"
             android:padding="12dp"
             android:textColorHint="@android:color/darker_gray" />
@@ -66,12 +75,13 @@
         <Button
             android:id="@+id/login_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/submit"
+            android:layout_height="60dp"
+            android:text="@string/login"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:backgroundTint="@color/design_default_color_primary"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/darkBlue"
             android:layout_marginBottom="16dp" />
 
         <TextView
@@ -80,6 +90,8 @@
             android:layout_height="wrap_content"
             android:text="@string/don_t_have_an_account"
             android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/darkBlue"
             android:gravity="center"
             android:layout_gravity="center"
             android:layout_marginTop="16dp" />
@@ -87,7 +99,7 @@
         <Button
             android:id="@+id/create_account_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:text="@string/create_account"
             android:textColor="@android:color/white"
             android:textSize="20sp"

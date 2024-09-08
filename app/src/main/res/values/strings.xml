@@ -10,4 +10,6 @@
     <string name="enter_password">Enter Password</string>
     <string name="enter_email">Enter Your Email</string>
     <string name="login">Login</string>
+    <string name="connectMsg">Connect with the right mentors you need</string>
+    <string name="sign_up">Sign Up</string>
 </resources>

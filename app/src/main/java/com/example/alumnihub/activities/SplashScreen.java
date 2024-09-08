@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,8 @@ import com.example.alumnihub.R;
 
 public class SplashScreen extends AppCompatActivity {
     private Button getStartedBtn;
+    private TextView alumniHub, descriptionText;
+    private ImageView girlPic, topArc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +32,11 @@ public class SplashScreen extends AppCompatActivity {
         });
 
         getStartedBtn = findViewById(R.id.getStartedButton);
+        alumniHub = findViewById(R.id.alumniHubTextView);
+        descriptionText = findViewById(R.id.descriptionText);
+        girlPic = findViewById(R.id.girlImgView);
+        topArc = findViewById(R.id.topArcImg);
+
         getStartedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

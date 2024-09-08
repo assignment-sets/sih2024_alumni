@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369833807869",
+    "project_id": "alumnihub-cebe5",
+    "storage_bucket": "alumnihub-cebe5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369833807869:android:b0b1a53eb51796ee6f1394",
+        "android_client_info": {
+          "package_name": "com.example.alumnihub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOcStSfLSCZA-8AGtaiVkIBfFOFRLWxDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
