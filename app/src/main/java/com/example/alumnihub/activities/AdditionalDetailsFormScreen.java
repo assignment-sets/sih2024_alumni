@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -26,12 +25,13 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.alumnihub.R;
 import com.example.alumnihub.backend_services.firebase_auth.AuthServices;
 import com.example.alumnihub.backend_services.firebase_storage.StorageServices;
+import com.example.alumnihub.backend_services.firestore_db.ApplicationServicesDB;
 import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
-import com.example.alumnihub.data_models.User;
+import com.example.alumnihub.data_models.Application;
 import com.example.alumnihub.utils.ImagePickerUtil;
 import com.example.alumnihub.utils.ValidationUtils;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
@@ -107,18 +107,19 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
 
     private void populateYearOfStudySpinner() {
         List<String> yearOfStudyOptions = new ArrayList<>();
-        yearOfStudyOptions.add("Select Year of Study"); // Placeholder
+        yearOfStudyOptions.add("Select Year of Study"); // Default item
         for (int i = 1; i <= 5; i++) {
             yearOfStudyOptions.add("Year " + i);
         }
         ArrayAdapter<String> yearOfStudyAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, yearOfStudyOptions);
         yearOfStudyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         yearOfStudySpinner.setAdapter(yearOfStudyAdapter);
+        yearOfStudySpinner.setSelection(0); // Set default selection
     }
 
     private void populateGraduationYearSpinner() {
         List<String> graduationYearOptions = new ArrayList<>();
-        graduationYearOptions.add("Select Graduation Year"); // Placeholder
+        graduationYearOptions.add("Select Graduation Year"); // Default item
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         for (int i = 2000; i <= currentYear; i++) {
             graduationYearOptions.add(String.valueOf(i));
@@ -126,6 +127,7 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
         ArrayAdapter<String> graduationYearAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, graduationYearOptions);
         graduationYearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         graduationYearSpinner.setAdapter(graduationYearAdapter);
+        graduationYearSpinner.setSelection(0); // Set default selection
     }
 
     private void setRadioGroupListener() {
@@ -196,136 +198,183 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
         String idProofPath = "/id_proofs/" + currentUser.getUid();
 
         // Upload profile picture if available
+        Task<Uri> pfpUploadTask = Tasks.forResult(null);
         if (pfpPicUri != null) {
-            storageServices.uploadFile(pfpPicUri, pfpPicPath)
-                    .addOnCompleteListener(task -> {
+            pfpUploadTask = storageServices.uploadFile(pfpPicUri, pfpPicPath)
+                    .continueWithTask(task -> {
                         if (task.isSuccessful()) {
-                            storageServices.getDownloadUrl(pfpPicPath)
-                                    .addOnCompleteListener(urlTask -> {
-                                        if (urlTask.isSuccessful()) {
-                                            pfpPicUrl = urlTask.getResult().toString();
-                                            Log.d("Storage", "Profile picture URL: " + pfpPicUrl);
-                                        } else {
-                                            Log.e("Storage", "Failed to get profile picture URL", urlTask.getException());
-                                        }
-                                    });
+                            return storageServices.getDownloadUrl(pfpPicPath);
                         } else {
-                            Log.e("Storage", "Failed to upload profile picture", task.getException());
+                            throw task.getException();
                         }
                     });
         }
 
         // Upload ID proof
-        storageServices.uploadFile(idProofUri, idProofPath)
-                .addOnCompleteListener(task -> {
+        Task<Uri> idProofUploadTask = storageServices.uploadFile(idProofUri, idProofPath)
+                .continueWithTask(task -> {
                     if (task.isSuccessful()) {
-                        storageServices.getDownloadUrl(idProofPath)
-                                .addOnCompleteListener(urlTask -> {
-                                    if (urlTask.isSuccessful()) {
-                                        idProofUrl = urlTask.getResult().toString();
-                                        Log.d("Storage", "ID proof URL: " + idProofUrl);
-                                    } else {
-                                        Log.e("Storage", "Failed to get ID proof URL", urlTask.getException());
-                                    }
-                                });
+                        return storageServices.getDownloadUrl(idProofPath);
                     } else {
-                        Log.e("Storage", "Failed to upload ID proof", task.getException());
+                        throw task.getException();
                     }
                 });
 
-        // Validate fields using ValidationUtils
-        if (!ValidationUtils.isValidFullName(fullNameValue)) {
-            showToast("Please enter a valid full name.");
-            return;
-        }
+        // Wait for both uploads to complete
+        Tasks.whenAllSuccess(pfpUploadTask, idProofUploadTask).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<Object> results = task.getResult();
+                pfpPicUrl = results.get(0) != null ? results.get(0).toString() : null;
+                idProofUrl = results.get(1).toString();
 
-        if (!ValidationUtils.isValidEnrollmentNum(enrollmentNumValue)) {
-            showToast("Please enter a valid enrollment number.");
-            return;
-        }
+                // Validate the inputs
+                if (!validateInputs(fullNameValue, enrollmentNumValue, contactNumValue, domainValue, bioValue,
+                        workplaceValue, yearOfStudyValue, graduationYearValue, idProofUrl, type)) {
+                    // If validation fails, return early
+                    return;
+                }
 
-        if (!ValidationUtils.isValidContactNum(contactNumValue)) {
-            showToast("Please enter a valid contact number.");
-            return;
-        }
+                // Update user and create application entry
+                UserServicesDB userServicesDB = new UserServicesDB();
+                userServicesDB.getUser(currentUser.getUid())
+                        .addOnSuccessListener(user -> {
+                            if (user != null) {
+                                // Set the fields
+                                user.setType(type);
+                                user.setFullName(fullNameValue);
+                                user.setEnrollmentNum(enrollmentNumValue);
+                                user.setContactNum(contactNumValue);
+                                user.setCurrentLocation(currentLocationValue);
+                                user.setDomain(domainValue);
+                                user.setBio(bioValue);
+                                user.setWorkplace(workplaceValue);
+                                user.setYearOfStudy(yearOfStudyValue);
+                                user.setGraduationYear(graduationYearValue);
+                                user.setPfPicUrl(pfpPicUrl);
+                                user.setIdProofUrl(idProofUrl);
+                                user.setIsComplete(true);
 
-        if (!ValidationUtils.isValidDomain(domainValue)) {
-            showToast("Please enter a valid domain.");
-            return;
-        }
-
-        if (!ValidationUtils.isValidBio(bioValue)) {
-            showToast("Please enter a valid bio.");
-            return;
-        }
-
-        if (type.equals("alumni") && !ValidationUtils.isValidWorkplace(workplaceValue)) {
-            showToast("Please enter a valid workplace.");
-            return;
-        }
-
-        if (type.equals("student") && !ValidationUtils.isValidYearOfStudy(yearOfStudyValue)) {
-            showToast("Please select a valid year of study.");
-            return;
-        }
-
-        if (type.equals("alumni") && !ValidationUtils.isValidGraduationYear(graduationYearValue)) {
-            showToast("Please select a valid graduation year.");
-            return;
-        }
-
-        if (!ValidationUtils.isValidIdProofUrl(idProofUrl)) {
-            showToast("Please enter a valid ID proof URL.");
-            return;
-        }
-
-        UserServicesDB userServicesDB = new UserServicesDB();
-        userServicesDB.getUser(currentUser.getUid())
-                .addOnSuccessListener(user -> {
-                    if (user != null) {
-                        // Set the fields
-                        user.setType(type);
-                        user.setFullName(fullNameValue);
-                        user.setEnrollmentNum(enrollmentNumValue);
-                        user.setContactNum(contactNumValue);
-                        user.setCurrentLocation(currentLocationValue);
-                        user.setDomain(domainValue);
-                        user.setBio(bioValue);
-                        user.setWorkplace(workplaceValue);
-                        user.setYearOfStudy(yearOfStudyValue);
-                        user.setGraduationYear(graduationYearValue);
-                        user.setPfPicUrl(pfpPicUrl);
-                        user.setIdProofUrl(idProofUrl);
-                        user.setIsComplete(true); // Assuming `setComplete` is correct
-
-                        // Update the user in Firestore
-                        userServicesDB.updateUser(currentUser.getUid(), user)
-                                .addOnSuccessListener(aVoid -> {
-                                    startActivity(new Intent(AdditionalDetailsFormScreen.this, MainActivity.class));
-                                    finish();
-                                    Log.d("UserUpdate", "User updated successfully.");
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Handle failure
-                                    Log.e("UserUpdateError", "Error updating user", e);
-                                });
-                    } else {
-                        Log.e("UserFetchError", "User not found.");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure
-                    Log.e("UserFetchError", "Error fetching user", e);
-                });
+                                // Update the user in Firestore
+                                userServicesDB.updateUser(currentUser.getUid(), user)
+                                        .addOnSuccessListener(aVoid -> {
+                                            // Create a new application entry
+                                            newApplicationEntry(enrollmentNumValue, idProofUrl)
+                                                    .addOnSuccessListener(aVoid1 -> {
+                                                        // Navigate to MainActivity on success
+                                                        startActivity(new Intent(AdditionalDetailsFormScreen.this, MainActivity.class));
+                                                        finish();
+                                                        Log.d("UserUpdate", "User and application updated successfully.");
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Log.e("ApplicationUpdateError", "Error adding application", e);
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.e("UserUpdateError", "Error updating user", e);
+                                        });
+                            } else {
+                                Log.e("UserFetchError", "User not found.");
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("UserFetchError", "Error fetching user", e);
+                        });
+            } else {
+                Log.e("Storage", "Failed to upload files", task.getException());
+            }
+        });
     }
 
-    /**
-     * Displays a toast message.
-     *
-     * @param message The message to display.
-     */
+    // Method to validate all inputs
+    private boolean validateInputs(String fullNameValue, String enrollmentNumValue, String contactNumValue,
+                                   String domainValue, String bioValue, String workplaceValue,
+                                   String yearOfStudyValue, String graduationYearValue,
+                                   String idProofUrl, String type) {
+
+        // Validate full name
+        if (!ValidationUtils.isValidFullName(fullNameValue)) {
+            showToast("Please enter a valid full name.");
+            return false;
+        }
+
+        // Validate enrollment number
+        if (!ValidationUtils.isValidEnrollmentNum(enrollmentNumValue)) {
+            showToast("Please enter a valid enrollment number.");
+            return false;
+        }
+
+        // Validate contact number
+        if (!ValidationUtils.isValidContactNum(contactNumValue)) {
+            showToast("Please enter a valid contact number.");
+            return false;
+        }
+
+        // Validate domain
+        if (!ValidationUtils.isValidDomain(domainValue)) {
+            showToast("Please enter a valid domain.");
+            return false;
+        }
+
+        // Validate bio
+        if (!ValidationUtils.isValidBio(bioValue)) {
+            showToast("Please enter a valid bio.");
+            return false;
+        }
+
+        // Alumni-specific validations
+        if (type.equals("alumni")) {
+            // Validate workplace for alumni
+            if (!ValidationUtils.isValidWorkplace(workplaceValue)) {
+                showToast("Please enter a valid workplace.");
+                return false;
+            }
+
+            // Validate graduation year for alumni
+            if (!ValidationUtils.isValidGraduationYear(graduationYearValue)) {
+                showToast("Please select a valid graduation year.");
+                return false;
+            }
+        }
+
+        // Student-specific validations
+        if (type.equals("student")) {
+            // Validate year of study for students
+            if (!ValidationUtils.isValidYearOfStudy(yearOfStudyValue)) {
+                showToast("Please select a valid year of study.");
+                return false;
+            }
+        }
+
+        // Validate ID proof URL
+        if (!ValidationUtils.isValidIdProofUrl(idProofUrl)) {
+            showToast("Please enter a valid ID proof URL.");
+            return false;
+        }
+
+        // If all validations pass, return true
+        return true;
+    }
+
+
+    // Method to create a new application entry
+    private Task<Void> newApplicationEntry(String enrollmentNumValue, String idProofUrl) {
+        ApplicationServicesDB applicationServicesDB = new ApplicationServicesDB();
+
+        // Create a new Application object with a unique ID
+        Application application = new Application(
+                applicationServicesDB.generateUniqueApplicationId(),
+                enrollmentNumValue,
+                idProofUrl,
+                false,
+                currentUser.getUid()
+        );
+
+        // Add the application to Firestore
+        return applicationServicesDB.addApplication(application);
+    }
+
+    // Method to show a toast message
     private void showToast(String message) {
         Toast.makeText(AdditionalDetailsFormScreen.this, message, Toast.LENGTH_SHORT).show();
     }
-
 }

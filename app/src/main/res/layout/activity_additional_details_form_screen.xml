@@ -192,7 +192,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/upload_profile_picture"
+            android:text="upload_profile_picture"
             android:textColor="@color/darkBlue"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -208,7 +208,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/design_default_color_secondary"
-            android:contentDescription="@string/upload_profile_picture"
+            android:contentDescription="upload_profile_picture"
             android:src="@drawable/baseline_cloud_upload_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -220,7 +220,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/upload_id_proof"
+            android:text="upload_id_proof"
             android:textColor="@color/darkBlue"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -229,14 +229,13 @@
             app:layout_constraintTop_toBottomOf="@id/upload_profile_pic_btn" />
 
         <!-- ImageButton for uploading ID proof -->
-
         <ImageButton
             android:id="@+id/upload_id_proof_btn"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/design_default_color_secondary"
-            android:contentDescription="@string/upload_id_proof"
+            android:contentDescription="upload_id_proof"
             android:src="@drawable/baseline_cloud_upload_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

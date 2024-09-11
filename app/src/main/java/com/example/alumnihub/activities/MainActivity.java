@@ -1,50 +1,38 @@
 package com.example.alumnihub.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.Window;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.alumnihub.R;
-import com.example.alumnihub.backend_services.firebase_auth.AuthServices;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    private Button signOutButton;
-    private TextView textView;
-    private AuthServices authService;
-
+    private Toolbar toolbar;
+    private BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
-        signOutButton = findViewById(R.id.signOutButton);
-        textView = findViewById(R.id.textView);
-        authService = new AuthServices();
-
-        //only for testing purpose change later
-        // Set current user ID to the TextView
-        FirebaseUser currentUser = authService.getCurrentUser();
-        if (currentUser != null) {
-            textView.setText(currentUser.getUid());
-        } else {
-            textView.setText("No user signed in");
-        }
-
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                authService.signOut();
-                startActivity(new Intent(MainActivity.this, LoginScreen.class));
-                finish();
-            }
+        // statusbar set korchi with color
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.bgSplashScreen));
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
         });
+        toolbar = findViewById(R.id.materialToolbar);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.alumni_hub);
     }
 }
