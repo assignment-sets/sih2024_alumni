@@ -1,4 +1,4 @@
-package com.example.alumnihub;
+package com.example.alumnihub.activities;
 
 import android.os.Bundle;
 import android.view.Window;
@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.alumnihub.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
