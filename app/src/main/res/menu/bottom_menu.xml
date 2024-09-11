@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/chat"
+        android:title="@string/community"
+        android:icon="@drawable/baseline_chat_24"/>
+    <item android:id="@+id/study_material"
+        android:title="@string/materials"
+        android:icon="@drawable/baseline_book_24"/>
+    <item android:id="@+id/search_account"
+        android:title="@string/search_user"
+        android:icon="@drawable/baseline_find_in_page_24"/>
+    <item android:id="@+id/posts"
+        android:title="@string/posts"
+        android:icon="@drawable/baseline_edit_note_24"/>
+    <item android:id="@+id/profile"
+        android:title="@string/profile_user"
+        android:icon="@drawable/baseline_account_circle_24"/>
+</menu>

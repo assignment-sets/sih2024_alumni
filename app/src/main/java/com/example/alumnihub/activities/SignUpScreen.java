@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.alumnihub.MainActivity;
 import com.example.alumnihub.R;
 
 public class SignUpScreen extends AppCompatActivity {

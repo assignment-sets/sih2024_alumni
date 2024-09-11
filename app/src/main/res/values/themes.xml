@@ -4,6 +4,9 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
+    <style name="BottomMenuIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+            <item name="android:colorBackground">@color/white</item>
+    </style>
 
     <style name="Theme.AlumniHub" parent="Base.Theme.AlumniHub" />
 </resources>
