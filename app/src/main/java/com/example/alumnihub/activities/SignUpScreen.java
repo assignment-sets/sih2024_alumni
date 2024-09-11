@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.alumnihub.MainActivity;
 import com.example.alumnihub.R;
 import com.example.alumnihub.backend_services.firebase_auth.AuthServices;
 import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;

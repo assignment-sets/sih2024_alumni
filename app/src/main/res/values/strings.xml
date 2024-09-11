@@ -12,7 +12,9 @@
     <string name="login">Login</string>
     <string name="connectMsg">Connect with the right mentors you need</string>
     <string name="sign_up">Sign Up</string>
-    <string name="upload_id_proof">Upload ID Proof</string>
-    <string name="tell_us_about_yourself">Tell Us About Yourself</string>
-    <string name="upload_profile_picture">Upload Profile Picture</string>
+    <string name="community">Community</string>
+    <string name="materials">Materials</string>
+    <string name="posts">Posts</string>
+    <string name="profile_user">Profile</string>
+    <string name="search_user">Search</string>
 </resources>
