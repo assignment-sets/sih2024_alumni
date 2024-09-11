@@ -1,3 +1,4 @@
+// Java
 package com.example.alumnihub.backend_services.firebase_storage;
 
 import android.net.Uri;
@@ -6,7 +7,6 @@ import android.util.Log;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firebase.storage.StorageTask;
 import com.google.android.gms.tasks.Task;
 
 public class StorageServices {
@@ -24,12 +24,18 @@ public class StorageServices {
      *
      * @param fileUri The URI of the file to upload.
      * @param path    The path in Firebase Storage where the file will be stored.
-     * @return A StorageTask representing the asynchronous upload operation.
+     * @return A Task representing the asynchronous upload operation.
      */
-    public StorageTask<UploadTask.TaskSnapshot> uploadFile(Uri fileUri, String path) {
+    public Task<Uri> uploadFile(Uri fileUri, String path) {
         StorageReference fileRef = mStorageRef.child(path);
         return fileRef.putFile(fileUri)
-                .addOnSuccessListener(taskSnapshot -> Log.d(TAG, "File uploaded successfully: " + path))
+                .continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return fileRef.getDownloadUrl();
+                })
+                .addOnSuccessListener(uri -> Log.d(TAG, "File uploaded successfully: " + uri.toString()))
                 .addOnFailureListener(exception -> Log.e(TAG, "File upload failed: " + exception.getMessage()));
     }
 

@@ -101,7 +101,7 @@ public class SignUpScreen extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             showToast("Sign-up successful");
-                                            startActivity(new Intent(SignUpScreen.this, MainActivity.class));
+                                            startActivity(new Intent(SignUpScreen.this, AdditionalDetailsFormScreen.class));
                                             finish();
                                         } else {
                                             showToast("Failed to add user details: " + Objects.requireNonNull(task.getException()).getMessage());

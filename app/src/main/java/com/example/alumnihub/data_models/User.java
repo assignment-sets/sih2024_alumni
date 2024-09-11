@@ -142,7 +142,7 @@ public class User {
     }
 
     @PropertyName("is_complete")
-    public void setComplete(boolean isComplete) {
+    public void setIsComplete(boolean isComplete) {
         this.isComplete = isComplete;
     }
 
@@ -152,7 +152,7 @@ public class User {
     }
 
     @PropertyName("is_verified")
-    public void setVerified(boolean isVerified) {
+    public void setIsVerified(boolean isVerified) {
         this.isVerified = isVerified;
     }
 
