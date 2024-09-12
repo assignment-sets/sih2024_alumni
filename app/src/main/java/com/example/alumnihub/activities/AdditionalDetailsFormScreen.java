@@ -45,6 +45,7 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
     private TextView profilePicName, idProofName;
     private EditText fullName, enrollmentNum, contactNum, currentLocation, domain, bio, workplace;
     private ImageButton uploadPfpButton, uploadIdProofButton;
+    private TextView yearOfStudyLabel, graduationYearLabel;
     private Button submitButton;
     private FirebaseUser currentUser;
 
@@ -89,6 +90,8 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
         workplace = findViewById(R.id.workplace);
         uploadPfpButton = findViewById(R.id.upload_profile_pic_btn);
         uploadIdProofButton = findViewById(R.id.upload_id_proof_btn);
+        yearOfStudyLabel = findViewById(R.id.year_of_study_label);
+        graduationYearLabel = findViewById(R.id.graduation_year_label);
         submitButton = findViewById(R.id.submit_btn);
 
         // Populate spinners
@@ -107,7 +110,7 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
 
     private void populateYearOfStudySpinner() {
         List<String> yearOfStudyOptions = new ArrayList<>();
-        yearOfStudyOptions.add("Select Year of Study"); // Default item
+        yearOfStudyOptions.add("N/A"); // Default item
         for (int i = 1; i <= 5; i++) {
             yearOfStudyOptions.add("Year " + i);
         }
@@ -119,7 +122,7 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
 
     private void populateGraduationYearSpinner() {
         List<String> graduationYearOptions = new ArrayList<>();
-        graduationYearOptions.add("Select Graduation Year"); // Default item
+        graduationYearOptions.add("N/A"); // Default item
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         for (int i = 2000; i <= currentYear; i++) {
             graduationYearOptions.add(String.valueOf(i));
@@ -136,12 +139,16 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
             if (checkedId == R.id.radio_student) {
                 type = "student";
                 yearOfStudySpinner.setVisibility(View.VISIBLE);
+                yearOfStudyLabel.setVisibility(View.VISIBLE);
                 graduationYearSpinner.setVisibility(View.GONE);
+                graduationYearLabel.setVisibility(View.GONE);
                 workplace.setVisibility(View.GONE);
             } else if (checkedId == R.id.radio_alumni) {
                 type = "alumni";
                 yearOfStudySpinner.setVisibility(View.GONE);
+                yearOfStudyLabel.setVisibility(View.GONE);
                 graduationYearSpinner.setVisibility(View.VISIBLE);
+                graduationYearLabel.setVisibility(View.VISIBLE);
                 workplace.setVisibility(View.VISIBLE);
             }
         });
@@ -362,7 +369,7 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
 
         // Create a new Application object with a unique ID
         Application application = new Application(
-                applicationServicesDB.generateUniqueApplicationId(),
+                currentUser.getUid(),
                 enrollmentNumValue,
                 idProofUrl,
                 false,
