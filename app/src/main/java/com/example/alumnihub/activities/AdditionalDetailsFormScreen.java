@@ -65,12 +65,12 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
         setContentView(R.layout.activity_additional_details_form_screen);
 
         // Set proper window view padding
-        View rootView = findViewById(android.R.id.content);
-        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
-            Insets systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemInsets.left, systemInsets.top, systemInsets.right, systemInsets.bottom);
-            return WindowInsetsCompat.CONSUMED;
-        });
+//        View rootView = findViewById(android.R.id.content);
+//        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
+//            Insets systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+//            v.setPadding(systemInsets.left, systemInsets.top, systemInsets.right, systemInsets.bottom);
+//            return WindowInsetsCompat.CONSUMED;
+//        });
 
         AuthServices authService = new AuthServices();
         currentUser = authService.getCurrentUser();

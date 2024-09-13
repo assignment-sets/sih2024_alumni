@@ -2,6 +2,7 @@ package com.example.alumnihub.data_models;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -38,7 +39,7 @@ public class User {
         this.isComplete = false;
         this.isVerified = false;
         this.pfPicUrl = null;
-        this.posts = null;
+        this.posts = new ArrayList<>();
         this.type = null;
         this.userId = null;
         this.userName = null;

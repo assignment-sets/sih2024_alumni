@@ -29,7 +29,6 @@ public class ValidationUtils {
         return contactNum != null && contactNum.matches("\\d{10}");
     }
 
-
     // Check if the domain is valid
     public static boolean isValidDomain(String domain) {
         return domain != null && !domain.trim().isEmpty();
@@ -68,5 +67,30 @@ public class ValidationUtils {
     // Check if the year of study is valid
     public static boolean isValidYearOfStudy(String yearOfStudy) {
         return yearOfStudy != null && yearOfStudy.matches("Year \\d");
+    }
+
+    // Check if the event title is valid
+    public static boolean isValidTitle(String title) {
+        return title != null && !title.trim().isEmpty();
+    }
+
+    // Check if the event description is valid
+    public static boolean isValidDescription(String description) {
+        return description != null && !description.trim().isEmpty();
+    }
+
+    // Check if the event mode is valid
+    public static boolean isValidMode(String mode) {
+    return mode != null && !mode.trim().isEmpty() && (mode.equals("Online") || mode.equals("Offline"));
+}
+
+    // Check if the event platform is valid
+    public static boolean isValidPlatform(String platform) {
+        return platform != null && !platform.trim().isEmpty();
+    }
+
+    // Check if the event venue is valid
+    public static boolean isValidVenue(String venue) {
+        return venue != null && !venue.trim().isEmpty();
     }
 }

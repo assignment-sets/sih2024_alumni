@@ -16,10 +16,11 @@
         android:theme="@style/Theme.AlumniHub"
         tools:targetApi="31">
         <activity
+            android:name=".activities.CreateEventPostFormScreen"
+            android:exported="false" />
+        <activity
             android:name=".activities.TestScreen"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".activities.AdditionalDetailsFormScreen"
             android:exported="false" />
@@ -37,6 +38,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.MainActivity"
