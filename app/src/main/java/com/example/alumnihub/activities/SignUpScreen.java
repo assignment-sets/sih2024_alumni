@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.alumnihub.R;
 import com.example.alumnihub.backend_services.firebase_auth.AuthServices;
+import com.example.alumnihub.backend_services.firestore_db.UserNameServicesDB;
 import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
 import com.example.alumnihub.utils.ValidationUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -84,36 +85,64 @@ public class SignUpScreen extends AppCompatActivity {
             return;
         }
 
-        // Perform sign-up
-        authService.signUp(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        // Check if the username already exists
+        UserNameServicesDB userNameServicesDB = new UserNameServicesDB();
+        userNameServicesDB.doesUsernameExist(username).addOnCompleteListener(new OnCompleteListener<Boolean>() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            public void onComplete(@NonNull Task<Boolean> task) {
                 if (task.isSuccessful()) {
-                    FirebaseUser currentUser = authService.getCurrentUser();
-                    if (currentUser != null) {
-                        UserServicesDB userServices = new UserServicesDB();
-                        userServices.addUser(currentUser.getUid(), username, currentUser.getEmail())
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            showToast("Sign-up successful");
-                                            startActivity(new Intent(SignUpScreen.this, AdditionalDetailsFormScreen.class));
-                                            finish();
-                                        } else {
-                                            showToast("Failed to add user details: " + Objects.requireNonNull(task.getException()).getMessage());
-                                        }
-                                    }
-                                });
+                    boolean usernameExists = task.getResult();
+                    if (usernameExists) {
+                        // Username already exists
+                        showToast("Username already in use. Please choose a different one.");
                     } else {
-                        showToast("Sign-up successful, but unable to fetch user details.");
+                        // Proceed with sign-up
+                        authService.signUp(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    FirebaseUser currentUser = authService.getCurrentUser();
+                                    if (currentUser != null) {
+                                        UserServicesDB userServices = new UserServicesDB();
+                                        userServices.addUser(currentUser.getUid(), username, currentUser.getEmail())
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            // Add the new username to the collection
+                                                            userNameServicesDB.addUsername(username).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        showToast("Sign-up successful");
+                                                                        startActivity(new Intent(SignUpScreen.this, AdditionalDetailsFormScreen.class));
+                                                                        finish();
+                                                                    } else {
+                                                                        showToast("Failed to add username: " + Objects.requireNonNull(task.getException()).getMessage());
+                                                                    }
+                                                                }
+                                                            });
+                                                        } else {
+                                                            showToast("Failed to add user details: " + Objects.requireNonNull(task.getException()).getMessage());
+                                                        }
+                                                    }
+                                                });
+                                    } else {
+                                        showToast("Sign-up successful, but unable to fetch user details.");
+                                    }
+                                } else {
+                                    showToast("Sign-up failed: " + Objects.requireNonNull(task.getException()).getMessage());
+                                }
+                            }
+                        });
                     }
                 } else {
-                    showToast("Sign-up failed: " + Objects.requireNonNull(task.getException()).getMessage());
+                    showToast("Failed to check username availability: " + Objects.requireNonNull(task.getException()).getMessage());
                 }
             }
         });
     }
+
 
     /**
      * Displays a toast message.

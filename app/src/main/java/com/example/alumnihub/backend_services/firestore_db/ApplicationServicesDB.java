@@ -7,6 +7,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 public class ApplicationServicesDB {
     private static final String TAG = "ApplicationServices";
@@ -18,7 +21,7 @@ public class ApplicationServicesDB {
      * @return A unique application ID.
      */
     public String generateUniqueApplicationId() {
-        return db.collection("verification_applications").document().getId();
+        return "AI" + db.collection("verification_applications").document().getId();
     }
 
     /**
@@ -77,5 +80,33 @@ public class ApplicationServicesDB {
                         throw task.getException();
                     }
                 });
+    }
+
+    /**
+     * Retrieves all applications from the Firestore database.
+     *
+     * @return A Task representing the asynchronous operation to fetch the applications.
+     */
+    public Task<List<Application>> getAllApplications() {
+        return db.collection("verification_applications").get()
+                .continueWith(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        // Convert the query results to a list of Application objects
+                        return querySnapshot.toObjects(Application.class);
+                    } else {
+                        throw task.getException();
+                    }
+                });
+    }
+
+    /**
+     * Deletes an application from the Firestore database by its ID.
+     *
+     * @param applicationId The unique ID of the application to be deleted.
+     * @return A Task representing the asynchronous operation to delete the application.
+     */
+    public Task<Void> deleteApplicationById(String applicationId) {
+        return db.collection("verification_applications").document(applicationId).delete();
     }
 }
