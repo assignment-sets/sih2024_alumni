@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgSplashScreen"
+    android:fillViewport="true"
     tools:context=".activities.AdditionalDetailsFormScreen">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +19,7 @@
             android:id="@+id/heading"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:gravity="center"
             android:text="Tell Us About Yourself"
@@ -32,7 +34,7 @@
             android:id="@+id/full_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="36dp"
             android:background="@drawable/textfields_background"
             android:hint="Full Name"
             android:inputType="textPersonName"

@@ -36,77 +36,7 @@ public class TestScreen extends AppCompatActivity {
         resultTextView = findViewById(R.id.sampleTextView);
         socialPostServicesDB = new SocialPostServicesDB();
 
-        // Test the methods
-//        testAddSocialPost();
-//        testDeleteSocialPostById("exampleSocialPostId");
-//        testGetSocialPostById("103");
-//        testGetAllSocialPosts();
+        // For testing the services and methods
     }
 
-    private void testAddSocialPost() {
-        SocialPost newSocialPost = new SocialPost("Example Caption", "http://example.com/image.jpg", "examplePostId", "exampleSocialPostId");
-        socialPostServicesDB.addSocialPost(newSocialPost).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(Task<Void> task) {
-                if (task.isSuccessful()) {
-                    resultTextView.setText("Social post added successfully");
-                } else {
-                    resultTextView.setText("Error: " + task.getException().getMessage());
-                }
-            }
-        });
-    }
-
-    private void testDeleteSocialPostById(String socialPostId) {
-        socialPostServicesDB.deleteSocialPostById(socialPostId).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(Task<Void> task) {
-                if (task.isSuccessful()) {
-                    resultTextView.setText("Social post deleted successfully");
-                } else {
-                    resultTextView.setText("Error: " + task.getException().getMessage());
-                }
-            }
-        });
-    }
-
-    private void testGetSocialPostById(String socialPostId) {
-        socialPostServicesDB.getSocialPostById(socialPostId).addOnCompleteListener(new OnCompleteListener<SocialPost>() {
-            @Override
-            public void onComplete(Task<SocialPost> task) {
-                if (task.isSuccessful()) {
-                    SocialPost socialPost = task.getResult();
-                    if (socialPost != null) {
-                        resultTextView.setText("Social Post Caption: " + socialPost.getCaption());
-                    } else {
-                        resultTextView.setText("Social post not found");
-                    }
-                } else {
-                    resultTextView.setText("Error: " + task.getException().getMessage());
-                }
-            }
-        });
-    }
-
-    private void testGetAllSocialPosts() {
-        socialPostServicesDB.getAllSocialPosts().addOnCompleteListener(new OnCompleteListener<List<SocialPost>>() {
-            @Override
-            public void onComplete(Task<List<SocialPost>> task) {
-                if (task.isSuccessful()) {
-                    List<SocialPost> socialPosts = task.getResult();
-                    if (socialPosts != null && !socialPosts.isEmpty()) {
-                        StringBuilder result = new StringBuilder("All Social Posts:\n");
-                        for (SocialPost socialPost : socialPosts) {
-                            result.append(socialPost.getCaption()).append("\n");
-                        }
-                        resultTextView.setText(result.toString());
-                    } else {
-                        resultTextView.setText("No social posts found");
-                    }
-                } else {
-                    resultTextView.setText("Error: " + task.getException().getMessage());
-                }
-            }
-        });
-    }
 }

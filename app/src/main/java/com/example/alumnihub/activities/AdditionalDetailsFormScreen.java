@@ -18,6 +18,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -61,16 +62,20 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_additional_details_form_screen);
 
+        // Change the status bar color
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.bgSplashScreen));
+        }
+
         // Set proper window view padding
-//        View rootView = findViewById(android.R.id.content);
-//        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
-//            Insets systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemInsets.left, systemInsets.top, systemInsets.right, systemInsets.bottom);
-//            return WindowInsetsCompat.CONSUMED;
-//        });
+        View rootView = findViewById(android.R.id.content);
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
+            Insets systemInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemInsets.left, systemInsets.top, systemInsets.right, systemInsets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         AuthServices authService = new AuthServices();
         currentUser = authService.getCurrentUser();
