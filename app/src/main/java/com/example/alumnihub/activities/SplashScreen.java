@@ -1,3 +1,4 @@
+// Java
 package com.example.alumnihub.activities;
 
 import android.content.Intent;
@@ -28,49 +29,66 @@ public class SplashScreen extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash_screen);
 
-        getStartedBtn = findViewById(R.id.getStartedButton);
-        alumniHub = findViewById(R.id.alumniHubTextView);
-        descriptionText = findViewById(R.id.descriptionText);
-        girlPic = findViewById(R.id.girlImgView);
-        topArc = findViewById(R.id.topArcImg);
+        initializeViews();
         authService = new AuthServices();
         currentUser = authService.getCurrentUser();
 
         getStartedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentUser == null) {
-                    // No user logged in, redirect to LoginScreen
-                    startActivity(new Intent(SplashScreen.this, LoginScreen.class));
-                    finish();  // Ensure the SplashScreen is finished so the user can't go back to it
-                } else {
-                    // User is logged in, check if their profile is complete
-                    UserServicesDB userServicesDB = new UserServicesDB();
-                    userServicesDB.getUser(currentUser.getUid())
-                            .addOnSuccessListener(user -> {
-                                if (user != null) {
-                                    if (!user.isComplete()) {
-                                        // Profile is incomplete, redirect to AdditionalDetailsFormScreen
-                                        startActivity(new Intent(SplashScreen.this, AdditionalDetailsFormScreen.class));
-                                    } else {
-                                        // Profile is complete, redirect to MainActivity
-                                        startActivity(new Intent(SplashScreen.this, MainActivity.class));
-                                    }
-                                    finish();  // Ensure the SplashScreen is finished
-                                } else {
-                                    // User document not found, handle accordingly
-                                    startActivity(new Intent(SplashScreen.this, LoginScreen.class));
-                                    finish();
-                                }
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle Firestore failure
-                                e.printStackTrace();  // Or use a logging library
-                                startActivity(new Intent(SplashScreen.this, LoginScreen.class));
-                                finish();
-                            });
-                }
+                handleGetStartedClick();
             }
         });
+    }
+
+    private void initializeViews() {
+        getStartedBtn = findViewById(R.id.getStartedButton);
+        alumniHub = findViewById(R.id.alumniHubTextView);
+        descriptionText = findViewById(R.id.descriptionText);
+        girlPic = findViewById(R.id.girlImgView);
+        topArc = findViewById(R.id.topArcImg);
+    }
+
+    private void handleGetStartedClick() {
+        if (currentUser == null) {
+            navigateToLoginScreen();
+        } else {
+            checkUserProfile();
+        }
+    }
+
+    private void navigateToLoginScreen() {
+        startActivity(new Intent(SplashScreen.this, LoginScreen.class));
+        finish();
+    }
+
+    private void checkUserProfile() {
+        UserServicesDB userServicesDB = new UserServicesDB();
+        userServicesDB.getUser(currentUser.getUid())
+                .addOnSuccessListener(user -> {
+                    if (user != null) {
+                        if (!user.isComplete()) {
+                            navigateToAdditionalDetailsFormScreen();
+                        } else {
+                            navigateToMainActivity();
+                        }
+                    } else {
+                        navigateToLoginScreen();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                    navigateToLoginScreen();
+                });
+    }
+
+    private void navigateToAdditionalDetailsFormScreen() {
+        startActivity(new Intent(SplashScreen.this, AdditionalDetailsFormScreen.class));
+        finish();
+    }
+
+    private void navigateToMainActivity() {
+        startActivity(new Intent(SplashScreen.this, MainActivity.class));
+        finish();
     }
 }
