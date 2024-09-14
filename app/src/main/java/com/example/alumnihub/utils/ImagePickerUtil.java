@@ -2,6 +2,7 @@ package com.example.alumnihub.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -78,7 +79,7 @@ public class ImagePickerUtil {
         }
     }
 
-    // Method to load image into ImageView using Picasso
+    // Method to load image into ImageView using Picasso and image URI
 
     /**
      * Loads an image into an ImageView using Picasso.
@@ -94,6 +95,8 @@ public class ImagePickerUtil {
                 .into(imageView);
     }
 
+    // Method to load image into ImageView using Picasso and image URL using an activity
+
     /**
      * Loads an image into an ImageView using Picasso from a URL string.
      *
@@ -105,6 +108,23 @@ public class ImagePickerUtil {
         Picasso.get()
                 .load(imageUrl)
                 .placeholder(R.drawable.img_placeholder_2) // Optional placeholder image
+                .into(imageView);
+    }
+
+    // Method to load image into ImageView using Picasso and image URL using context
+
+    /**
+     * Loads an image into an ImageView using Picasso from a URL string.
+     *
+     * @param context   The context from which the request is made.
+     * @param imageUrl  The URL of the image to be loaded.
+     * @param imageView The ImageView into which the image will be loaded.
+     */
+
+    public static void loadImageIntoView(Context context, String imageUrl, ImageView imageView) {
+        Picasso.get()
+                .load(imageUrl)
+                .placeholder(R.drawable.img_placeholder_2)
                 .into(imageView);
     }
 

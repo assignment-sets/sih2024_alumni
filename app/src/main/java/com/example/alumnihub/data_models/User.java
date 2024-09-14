@@ -2,10 +2,11 @@ package com.example.alumnihub.data_models;
 
 import com.google.firebase.firestore.PropertyName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Serializable {
     private String bio;
     private String contactNum;
     private String currentLocation;
@@ -225,6 +226,12 @@ public class User {
     @PropertyName("year_of_study")
     public void setYearOfStudy(String yearOfStudy) {
         this.yearOfStudy = yearOfStudy;
+    }
+
+    // Override the toString() method to return the username
+    @Override
+    public String toString() {
+        return userName;
     }
 }
 

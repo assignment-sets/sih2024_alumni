@@ -7,6 +7,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserServicesDB {
     private static final String TAG = "UserServices";
@@ -75,5 +80,57 @@ public class UserServicesDB {
                         throw task.getException();
                     }
                 });
+    }
+
+    /**
+     * Fetches a user from the Firestore database based on the given username.
+     *
+     * @param username The username of the user to fetch.
+     * @return A Task representing the asynchronous operation to fetch the user.
+     */
+    public Task<User> getUserByUsername(String username) {
+        Query query = db.collection("users").whereEqualTo("user_name", username);
+
+        return query.get().continueWith(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (!querySnapshot.isEmpty()) {
+                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                    return document.toObject(User.class);
+                } else {
+                    throw new Exception("User not found.");
+                }
+            } else {
+                throw task.getException();
+            }
+        });
+    }
+
+    /**
+     * Fetches users from the Firestore database whose usernames match the given substring.
+     *
+     * @param partialUsername The substring of the username to match.
+     * @return A Task representing the asynchronous operation to fetch the users.
+     */
+    public Task<List<User>> getUsersByPartialUsername(String partialUsername) {
+        String endString = partialUsername + "\uf8ff";
+        Query query = db.collection("users")
+                .whereGreaterThanOrEqualTo("user_name", partialUsername)
+                .whereLessThanOrEqualTo("user_name", endString);
+
+        return query.get().continueWith(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                List<User> users = new ArrayList<>();
+                if (!querySnapshot.isEmpty()) {
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        users.add(document.toObject(User.class));
+                    }
+                }
+                return users;
+            } else {
+                throw task.getException();
+            }
+        });
     }
 }

@@ -10,14 +10,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.alumnihub.R;
-import com.example.alumnihub.backend_services.firestore_db.UniversityServicesDB;
-import com.example.alumnihub.data_models.University;
+import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
+import com.example.alumnihub.data_models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class TestScreen extends AppCompatActivity {
 
-    private UniversityServicesDB universityServicesDB;
+    private UserServicesDB userServicesDB;
     private TextView resultTextView;
 
     @Override
@@ -32,7 +32,18 @@ public class TestScreen extends AppCompatActivity {
         });
 
         resultTextView = findViewById(R.id.sampleTextView);
-        universityServicesDB = new UniversityServicesDB();
+        userServicesDB = new UserServicesDB();
 
+        // Retrieve the User object from the Intent
+        User user = (User) getIntent().getSerializableExtra("user");
+        if (user != null) {
+            // Display the User details in the TextView
+            String userDetails = "Username: " + user.getUserName() + "\n" +
+                    "Email: " + user.getEmail() + "\n" +
+                    "Full Name: " + user.getFullName();
+            resultTextView.setText(userDetails);
+        } else {
+            resultTextView.setText("No user data available");
+        }
     }
 }

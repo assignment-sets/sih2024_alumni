@@ -273,7 +273,7 @@ public class AdditionalDetailsFormScreen extends AppCompatActivity {
                                             newApplicationEntry(enrollmentNumValue, idProofUrl)
                                                     .addOnSuccessListener(aVoid1 -> {
                                                         // Navigate to MainActivity on success
-                                                        startActivity(new Intent(AdditionalDetailsFormScreen.this, CreateSocialPostFormScreen.class));
+                                                        startActivity(new Intent(AdditionalDetailsFormScreen.this, MainActivity.class));
                                                         finish();
                                                         Log.d("UserUpdate", "User and application updated successfully.");
                                                     })
