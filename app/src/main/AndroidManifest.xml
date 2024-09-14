@@ -16,6 +16,18 @@
         android:theme="@style/Theme.AlumniHub"
         tools:targetApi="31">
         <activity
+            android:name=".activities.CreateSocialPostFormScreen"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".activities.CreateEventPostFormScreen"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".activities.TestScreen"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".activities.JobPostFormActivity"
             android:exported="false" />
         <activity
