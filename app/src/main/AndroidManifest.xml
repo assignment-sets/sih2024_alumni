@@ -25,7 +25,9 @@
             android:exported="false"></activity>
         <activity
             android:name=".activities.TestScreen"
-            android:exported="false" />
+            android:exported="false">
+
+        </activity>
         <activity
             android:name=".activities.AdditionalDetailsFormScreen"
             android:exported="false"></activity>

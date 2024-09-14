@@ -6,7 +6,6 @@ import java.util.List;
 public class University {
     private String address;
     private List<String> admins;
-    private List<String> applications;
     private String contactNum;
     private String description;
     private List<String> events;
@@ -27,7 +26,6 @@ public class University {
     public University(String address, List<String> admins, List<String> applications, String contactNum, String description, List<String> events, String logoUrl, List<String> posts, String publicMail, String qrUrl, String unvId, String unvName, String websiteUrl) {
         this.address = address;
         this.admins = admins;
-        this.applications = applications;
         this.contactNum = contactNum;
         this.description = description;
         this.events = events;
@@ -58,16 +56,6 @@ public class University {
     @PropertyName("admins")
     public void setAdmins(List<String> admins) {
         this.admins = admins;
-    }
-
-    @PropertyName("applications")
-    public List<String> getApplications() {
-        return applications;
-    }
-
-    @PropertyName("applications")
-    public void setApplications(List<String> applications) {
-        this.applications = applications;
     }
 
     @PropertyName("contact_num")

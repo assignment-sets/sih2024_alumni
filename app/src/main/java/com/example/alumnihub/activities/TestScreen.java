@@ -10,16 +10,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.alumnihub.R;
-import com.example.alumnihub.backend_services.firestore_db.SocialPostServicesDB;
-import com.example.alumnihub.data_models.SocialPost;
+import com.example.alumnihub.backend_services.firestore_db.UniversityServicesDB;
+import com.example.alumnihub.data_models.University;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.util.List;
-
 public class TestScreen extends AppCompatActivity {
 
-    private SocialPostServicesDB socialPostServicesDB;
+    private UniversityServicesDB universityServicesDB;
     private TextView resultTextView;
 
     @Override
@@ -34,9 +32,7 @@ public class TestScreen extends AppCompatActivity {
         });
 
         resultTextView = findViewById(R.id.sampleTextView);
-        socialPostServicesDB = new SocialPostServicesDB();
+        universityServicesDB = new UniversityServicesDB();
 
-        // For testing the services and methods
     }
-
 }
