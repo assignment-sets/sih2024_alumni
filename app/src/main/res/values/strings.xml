@@ -17,4 +17,11 @@
     <string name="posts">Posts</string>
     <string name="profile_user">Profile</string>
     <string name="search_user">Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_profiles">Search Profiles...</string>
+    <string name="job_posts">Job Posts</string>
+    <string name="social_posts">Social Posts</string>
+    <string name="event_posts">Event Posts</string>
+    <string name="posts_caption">Caption</string>
 </resources>
