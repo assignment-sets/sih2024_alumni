@@ -81,8 +81,8 @@ public class ValidationUtils {
 
     // Check if the event mode is valid
     public static boolean isValidMode(String mode) {
-    return mode != null && !mode.trim().isEmpty() && (mode.equals("Online") || mode.equals("Offline"));
-}
+        return mode != null && !mode.trim().isEmpty() && (mode.equals("Online") || mode.equals("Offline"));
+    }
 
     // Check if the event platform is valid
     public static boolean isValidPlatform(String platform) {
@@ -92,5 +92,10 @@ public class ValidationUtils {
     // Check if the event venue is valid
     public static boolean isValidVenue(String venue) {
         return venue != null && !venue.trim().isEmpty();
+    }
+
+    // Check if the caption is valid
+    public static boolean isValidCaption(String caption) {
+        return caption != null && !caption.trim().isEmpty();
     }
 }

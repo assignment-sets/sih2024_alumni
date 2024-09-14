@@ -23,6 +23,7 @@ public class ImagePickerUtil {
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 100;
 
     // Method to request gallery access permission and open gallery if permission is granted
+
     /**
      * Requests permission to access the gallery and opens the gallery if permission is granted.
      *
@@ -43,6 +44,7 @@ public class ImagePickerUtil {
     }
 
     // Method to open the gallery
+
     /**
      * Opens the gallery to pick an image.
      *
@@ -55,6 +57,7 @@ public class ImagePickerUtil {
     }
 
     // Method to handle permission result, you need to call this in your activity's `onRequestPermissionsResult` method
+
     /**
      * Handles the result of the permission request.
      *
@@ -76,6 +79,7 @@ public class ImagePickerUtil {
     }
 
     // Method to load image into ImageView using Picasso
+
     /**
      * Loads an image into an ImageView using Picasso.
      *
@@ -86,11 +90,26 @@ public class ImagePickerUtil {
     public static void loadImageIntoView(Activity activity, Uri imageUri, ImageView imageView) {
         Picasso.get()
                 .load(imageUri)
-                .placeholder(R.drawable.placeholder_image) // Optional placeholder image
+                .placeholder(R.drawable.img_placeholder_2) // Optional placeholder image
+                .into(imageView);
+    }
+
+    /**
+     * Loads an image into an ImageView using Picasso from a URL string.
+     *
+     * @param activity  The activity from which the request is made.
+     * @param imageUrl  The URL of the image to be loaded.
+     * @param imageView The ImageView into which the image will be loaded.
+     */
+    public static void loadImageIntoView(Activity activity, String imageUrl, ImageView imageView) {
+        Picasso.get()
+                .load(imageUrl)
+                .placeholder(R.drawable.img_placeholder_2) // Optional placeholder image
                 .into(imageView);
     }
 
     // Method to get the uploaded image URI
+
     /**
      * Retrieves the URI of the uploaded image.
      *
@@ -102,6 +121,7 @@ public class ImagePickerUtil {
     }
 
     // Method to get the file name from a Uri
+
     /**
      * Retrieves the file name from a URI.
      *
