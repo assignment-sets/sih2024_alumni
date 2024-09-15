@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="400dp"
     android:layout_margin="10dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="10dp">
@@ -11,25 +11,52 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:elevation="15dp">
+        android:elevation="15dp"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <!-- New LinearLayout for user image and username -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_profile_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="profile_image"
+                android:src="@drawable/img_placeholder_2" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Username"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/user_social_posts_caption"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:padding="10dp"
+            android:text="@string/posts_caption"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/user_social_posts_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY"
             android:cropToPadding="true"
+            android:scaleType="fitXY"
             tools:srcCompat="@tools:sample/avatars" />
-        <TextView
-            android:id="@+id/user_social_posts_caption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/posts_caption"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:padding="10dp"
-            />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

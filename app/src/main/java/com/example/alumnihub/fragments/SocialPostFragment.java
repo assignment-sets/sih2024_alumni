@@ -1,66 +1,86 @@
 package com.example.alumnihub.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.alumnihub.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SocialPostFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.alumnihub.R;
+import com.example.alumnihub.activities.CreateSocialPostFormScreen;
+import com.example.alumnihub.adapters.SocialPostAdapter;
+import com.example.alumnihub.backend_services.firestore_db.SocialPostServicesDB;
+import com.example.alumnihub.data_models.SocialPost;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
+import java.util.List;
+import android.util.Log;
+
 public class SocialPostFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public SocialPostFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SocialPostFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SocialPostFragment newInstance(String param1, String param2) {
-        SocialPostFragment fragment = new SocialPostFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private static final String TAG = "SocialPostFragment";
+    private RecyclerView socialPostsRecyclerView;
+    private SocialPostAdapter socialPostAdapter;
+    private List<SocialPost> socialPostList = new ArrayList<>();
+    private SocialPostServicesDB socialPostServicesDB;
+    private FloatingActionButton socialPostButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        socialPostServicesDB = new SocialPostServicesDB();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_social_post, container, false);
+        View view = inflater.inflate(R.layout.fragment_social_post, container, false);
+        socialPostsRecyclerView = view.findViewById(R.id.social_posts_recyclerview);
+        socialPostsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        socialPostAdapter = new SocialPostAdapter(getContext(), socialPostList);
+        socialPostsRecyclerView.setAdapter(socialPostAdapter);
+        socialPostButton = view.findViewById(R.id.socialPostButton);
+
+        // Set OnClickListener for the FloatingActionButton
+        socialPostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to CreateSocialPostFormScreen
+                Intent intent = new Intent(getActivity(), CreateSocialPostFormScreen.class);
+                startActivity(intent);
+            }
+        });
+
+        fetchSocialPosts();
+        return view;
+    }
+
+    private void fetchSocialPosts() {
+        Log.d(TAG, "Fetching social posts...");
+        socialPostServicesDB.getAllSocialPosts().addOnCompleteListener(new OnCompleteListener<List<SocialPost>>() {
+            @Override
+            public void onComplete(@NonNull Task<List<SocialPost>> task) {
+                if (task.isSuccessful()) {
+                    List<SocialPost> posts = task.getResult();
+                    socialPostList.clear();
+                    if (posts != null && !posts.isEmpty()) {
+                        socialPostList.addAll(posts);
+                    }
+                    socialPostAdapter.notifyDataSetChanged();
+                    Log.d(TAG, "Fetched " + socialPostList.size() + " social posts.");
+                } else {
+                    Log.e(TAG, "Error fetching social posts", task.getException());
+                }
+            }
+        });
     }
 }

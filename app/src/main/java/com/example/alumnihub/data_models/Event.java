@@ -11,6 +11,7 @@ public class Event {
     private String postId;
     private String title;
     private String venue;
+    private String userId; // New field
 
     // Default constructor
     public Event() {
@@ -18,7 +19,7 @@ public class Event {
     }
 
     // Constructor to initialize the fields
-    public Event(String avatarUrl, String description, String eventId, String mode, String platform, String postId, String title, String venue) {
+    public Event(String avatarUrl, String description, String eventId, String mode, String platform, String postId, String title, String venue, String userId) {
         this.avatarUrl = avatarUrl;
         this.description = description;
         this.eventId = eventId;
@@ -27,6 +28,7 @@ public class Event {
         this.postId = postId;
         this.title = title;
         this.venue = venue;
+        this.userId = userId; // Initialize new field
     }
 
     @PropertyName("avatar_url")
@@ -107,5 +109,15 @@ public class Event {
     @PropertyName("venue")
     public void setVenue(String venue) {
         this.venue = venue;
+    }
+
+    @PropertyName("user_id")
+    public String getUserId() {
+        return userId;
+    }
+
+    @PropertyName("user_id")
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

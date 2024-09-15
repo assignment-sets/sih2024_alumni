@@ -141,7 +141,7 @@ public class CreateSocialPostFormScreen extends AppCompatActivity {
                 postServicesDB.addPost(post)
                         .addOnSuccessListener(aVoid -> {
                             // Create event object
-                            SocialPost socialPost = new SocialPost(captionValue, ImgUrl, postId, socialPostId);
+                            SocialPost socialPost = new SocialPost(captionValue, ImgUrl, postId, socialPostId, currentUser.getUid());
 
                             // Add event to Firestore
                             socialPostServicesDB.addSocialPost(socialPost)
@@ -162,7 +162,7 @@ public class CreateSocialPostFormScreen extends AppCompatActivity {
                                                         userServicesDB.updateUser(currentUser.getUid(), user)
                                                                 .addOnSuccessListener(aVoid2 -> {
                                                                     showToast("Event created successfully.");
-//                                                                    finish();
+                                                                    finish();
                                                                 })
                                                                 .addOnFailureListener(e -> {
                                                                     Log.e("UserUpdateError", "Error updating user", e);

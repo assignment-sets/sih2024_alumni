@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.alumnihub.R;
 import com.example.alumnihub.activities.TestScreen;
-import com.example.alumnihub.adapters.UserAdapter;
+import com.example.alumnihub.adapters.SearchUserAdapter;
 import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
 import com.example.alumnihub.data_models.User;
 
@@ -87,10 +87,10 @@ public class SearchFragment extends Fragment {
      * Updates the AutoCompleteTextView with the user suggestions.
      */
     private void updateAutoCompleteTextView() {
-        UserAdapter userAdapter = new UserAdapter(getContext(), userList);
-        autoCompleteTextView.setAdapter(userAdapter);
+        SearchUserAdapter searchUserAdapter = new SearchUserAdapter(getContext(), userList);
+        autoCompleteTextView.setAdapter(searchUserAdapter);
         autoCompleteTextView.setThreshold(1); // Start showing suggestions after 1 character
-        userAdapter.notifyDataSetChanged(); // Notify the adapter of data changes
+        searchUserAdapter.notifyDataSetChanged(); // Notify the adapter of data changes
     }
 
     /**

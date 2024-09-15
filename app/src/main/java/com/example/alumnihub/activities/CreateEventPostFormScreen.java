@@ -177,7 +177,7 @@ public class CreateEventPostFormScreen extends AppCompatActivity {
                 postServicesDB.addPost(post)
                         .addOnSuccessListener(aVoid -> {
                             // Create event object
-                            Event event = new Event(avatarUrl, descriptionValue, eventId, modeValue, platformValue, postId, titleValue, venueValue);
+                            Event event = new Event(avatarUrl, descriptionValue, eventId, modeValue, platformValue, postId, titleValue, venueValue, currentUser.getUid());
 
                             // Add event to Firestore
                             eventServicesDB.addEvent(event)

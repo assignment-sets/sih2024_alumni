@@ -7,6 +7,7 @@ public class SocialPost {
     private String imageUrl;
     private String postId;
     private String socialPostId;
+    private String userId; // New field
 
     // Default constructor
     public SocialPost() {
@@ -14,11 +15,12 @@ public class SocialPost {
     }
 
     // Constructor to initialize the fields
-    public SocialPost(String caption, String imageUrl, String postId, String socialPostId) {
+    public SocialPost(String caption, String imageUrl, String postId, String socialPostId, String userId) {
         this.caption = caption;
         this.imageUrl = imageUrl;
         this.postId = postId;
         this.socialPostId = socialPostId;
+        this.userId = userId; // Initialize new field
     }
 
     @PropertyName("caption")
@@ -59,5 +61,15 @@ public class SocialPost {
     @PropertyName("social_post_id")
     public void setSocialPostId(String socialPostId) {
         this.socialPostId = socialPostId;
+    }
+
+    @PropertyName("user_id")
+    public String getUserId() {
+        return userId;
+    }
+
+    @PropertyName("user_id")
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
