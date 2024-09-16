@@ -24,4 +24,5 @@
     <string name="social_posts">Social Posts</string>
     <string name="event_posts">Event Posts</string>
     <string name="posts_caption">Caption</string>
+    <string name="job_post_form">Post Job Opening</string>
 </resources>
