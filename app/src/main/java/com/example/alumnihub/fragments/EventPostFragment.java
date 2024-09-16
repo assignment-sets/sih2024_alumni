@@ -26,6 +26,10 @@ public class EventPostFragment extends Fragment {
     private EventServicesDB eventServicesDB;
     private FloatingActionButton eventPostButton;
 
+    public EventPostFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

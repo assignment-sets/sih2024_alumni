@@ -34,6 +34,10 @@ public class SocialPostFragment extends Fragment {
     private SocialPostServicesDB socialPostServicesDB;
     private FloatingActionButton socialPostButton;
 
+    public SocialPostFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

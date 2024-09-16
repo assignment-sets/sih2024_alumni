@@ -1,9 +1,10 @@
+// SearchFragment.java
 package com.example.alumnihub.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.alumnihub.R;
-import com.example.alumnihub.activities.TestScreen;
 import com.example.alumnihub.adapters.SearchUserAdapter;
 import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
 import com.example.alumnihub.data_models.User;
@@ -83,9 +83,6 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Updates the AutoCompleteTextView with the user suggestions.
-     */
     private void updateAutoCompleteTextView() {
         SearchUserAdapter searchUserAdapter = new SearchUserAdapter(getContext(), userList);
         autoCompleteTextView.setAdapter(searchUserAdapter);
@@ -93,11 +90,6 @@ public class SearchFragment extends Fragment {
         searchUserAdapter.notifyDataSetChanged(); // Notify the adapter of data changes
     }
 
-    /**
-     * Fetches user suggestions based on the partial username.
-     *
-     * @param partialUsername The partial username to search for.
-     */
     private void fetchUserSuggestions(String partialUsername) {
         userServicesDB.getUsersByPartialUsername(partialUsername)
                 .addOnCompleteListener(task -> {
@@ -117,21 +109,18 @@ public class SearchFragment extends Fragment {
                 });
     }
 
-    /**
-     * Fetches the user details and passes them to the next activity.
-     *
-     * @param username The username of the selected user.
-     */
     private void fetchAndPassUser(String username) {
         userServicesDB.getUserByUsername(username)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         User user = task.getResult();
                         if (user != null) {
-                            // Pass the user details to the TestScreen activity
-                            Intent intent = new Intent(getActivity(), TestScreen.class);
-                            intent.putExtra("user", user);
-                            startActivity(intent);
+                            // Pass the user details to the ProfileViewFragment
+                            ProfileViewFragment profileViewFragment = ProfileViewFragment.newInstance(user);
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.every_content_position, profileViewFragment); // Use every_content_position instead of fragment_container
+                            transaction.addToBackStack(null);
+                            transaction.commit();
                         } else {
                             // Handle user not found
                             showToast("User not found.");
@@ -144,11 +133,6 @@ public class SearchFragment extends Fragment {
                 });
     }
 
-    /**
-     * Displays a toast message.
-     *
-     * @param message The message to display.
-     */
     private void showToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
