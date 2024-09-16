@@ -1,10 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgSplashScreen"
+    android:fillViewport="true"
     tools:context=".activities.JobPostFormActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/job_post_form_activity_bg"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/jobFormTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/job_post_form"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/darkBlue"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/jobTtileField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/textfields_background"
+            android:ems="10"
+            android:hint="Enter title"
+            android:inputType="text"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/jobFormTextView" />
+
+        <EditText
+            android:id="@+id/jobLocationField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textfields_background"
+            android:ems="10"
+            android:hint="Enter job location"
+            android:inputType="text"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/jobTtileField" />
+
+        <EditText
+            android:id="@+id/jobDescriptionField"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="22dp"
+            android:background="@drawable/textfields_background"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Enter job description"
+            android:inputType="textMultiLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/jobLocationField" />
+
+        <EditText
+            android:id="@+id/jobDomainField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textfields_background"
+            android:ems="10"
+            android:hint="Enter job domain"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/jobDescriptionField" />
+
+        <EditText
+            android:id="@+id/jobRequiredSkillField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textfields_background"
+            android:ems="10"
+            android:hint="Enter Required skills"
+            android:inputType="textMultiLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/jobDomainField" />
+
+        <EditText
+            android:id="@+id/jobSalaryField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textfields_background"
+            android:ems="10"
+            android:hint="Enter salary"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/jobRequiredSkillField" />
+
+        <EditText
+            android:id="@+id/jobWorkModeField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="Enter job mode"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textfields_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/jobSalaryField" />
+
+        <EditText
+            android:id="@+id/contactEmailField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:hint="Contact email"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textfields_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/jobWorkModeField"/>
+        <EditText
+            android:id="@+id/contactNumberField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:hint="Contact phone number"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textfields_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contactEmailField"/>
+        <Button
+            android:id="@+id/job_post_submit_btn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="@color/darkBlue"
+            android:text="Post Job "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contactNumberField" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
