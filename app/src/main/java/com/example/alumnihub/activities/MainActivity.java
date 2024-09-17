@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
                 if(menuItem.getItemId() == R.id.chat){
-                    getSupportFragmentManager().popBackStack();
+                    fragmentTransaction1.replace(R.id.every_content_position, new CommunityChatFragment());
+                    fragmentTransaction1.addToBackStack(null);
                 } else if (menuItem.getItemId() == R.id.study_material) {
                     fragmentTransaction1.replace(R.id.every_content_position, new MaterialShareFragment());
                     fragmentTransaction1.addToBackStack(null);

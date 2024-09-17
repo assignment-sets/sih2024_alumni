@@ -1,6 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="10dp"
+    android:layout_margin="20dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:orientation="vertical"
+        android:background="#CBCACA">
+        <TextView
+            android:id="@+id/job_post_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="job post Title"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/job_post_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="Job post location"
+            android:textStyle="italic"
+            android:textSize="18sp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/job_post_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:padding="6dp"
+            android:text="Job post Description"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/job_post_domain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="Job post domain"
+            android:textStyle="italic"
+            android:textSize="15sp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/job_post_required_skill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="Job post required skills"
+            android:textStyle="italic"
+            android:textSize="17sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/job_post_salary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="Job post salary"
+            android:textStyle="italic"
+            android:textSize="17sp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/job_post_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="Job post mode"
+            android:textStyle="bold"
+            android:textSize="17sp" />
+        <TextView
+            android:id="@+id/job_post_contact_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="Job post contact email"
+            android:textStyle="italic"
+            android:textSize="15sp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/job_post_contact_phone_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:text="Job post contact phone no."
+            android:textStyle="italic"
+            android:textSize="15sp"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/job_post_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="4dp"
+            android:gravity="end"
+            android:text="Posted by Username"
+            android:textSize="14sp"
+            android:textColor="@color/gray" />
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

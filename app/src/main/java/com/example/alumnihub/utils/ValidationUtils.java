@@ -74,6 +74,13 @@ public class ValidationUtils {
         return title != null && !title.trim().isEmpty();
     }
 
+    public static boolean isValidLocation(String location){
+       return location != null && !location.trim().isEmpty();
+    }
+
+    public static boolean isValidRequiredSkill(String requiredSkill) {
+        return requiredSkill != null && !requiredSkill.trim().isEmpty();
+    }
     // Check if the event description is valid
     public static boolean isValidDescription(String description) {
         return description != null && !description.trim().isEmpty();
@@ -98,4 +105,32 @@ public class ValidationUtils {
     public static boolean isValidCaption(String caption) {
         return caption != null && !caption.trim().isEmpty();
     }
+    // Validate if the salary is a valid number and not empty
+    public static boolean isValidSalary(String salary) {
+        if (salary == null || salary.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            double parsedSalary = Double.parseDouble(salary);
+            return parsedSalary > 0; // Salary should be a positive number
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    // Validate if job mode is not null and not empty
+    public static boolean isValidJobMode(String jobMode) {
+        return jobMode != null && !jobMode.trim().isEmpty();
+    }
+
+    // Validate if contact email is valid using Android's pattern matcher
+    public static boolean isValidContactEmail(String contactEmail) {
+        return contactEmail != null && android.util.Patterns.EMAIL_ADDRESS.matcher(contactEmail).matches();
+    }
+
+    // Validate if phone number is valid (10-digit or more) and not empty
+    public static boolean isValidPhoneNumber(String contactPhoneNo) {
+        return contactPhoneNo != null && contactPhoneNo.trim().length() >= 10 && android.util.Patterns.PHONE.matcher(contactPhoneNo).matches();
+    }
+
 }

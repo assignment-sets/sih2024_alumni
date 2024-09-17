@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class ProfileViewFragment extends Fragment {
 
     private static final String ARG_USER = "user";
@@ -71,22 +73,47 @@ public class ProfileViewFragment extends Fragment {
         resultTextView.setText(userDetails);
     }
 
+//    private void fetchCurrentUser() {
+//        String currentUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+//        userServicesDB.getUser(currentUserId).addOnCompleteListener(new OnCompleteListener<User>() {
+//            @Override
+//            public void onComplete(@NonNull Task<User> task) {
+//                if (task.isSuccessful()) {
+//                    User user = task.getResult();
+//                    if (user != null) {
+//                        displayUserDetails(user);
+//                    } else {
+//                        resultTextView.setText("No user data available");
+//                    }
+//                } else {
+//                    resultTextView.setText("Failed to fetch user data");
+//                }
+//            }
+//        });
+//    }  it is the main code but for testing i replace it
+
     private void fetchCurrentUser() {
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        userServicesDB.getUser(currentUserId).addOnCompleteListener(new OnCompleteListener<User>() {
-            @Override
-            public void onComplete(@NonNull Task<User> task) {
-                if (task.isSuccessful()) {
-                    User user = task.getResult();
-                    if (user != null) {
-                        displayUserDetails(user);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            String currentUserId = auth.getCurrentUser().getUid();
+            userServicesDB.getUser(currentUserId).addOnCompleteListener(new OnCompleteListener<User>() {
+                @Override
+                public void onComplete(@NonNull Task<User> task) {
+                    if (task.isSuccessful()) {
+                        User user = task.getResult();
+                        if (user != null) {
+                            displayUserDetails(user);
+                        } else {
+                            resultTextView.setText("No user data available");
+                        }
                     } else {
-                        resultTextView.setText("No user data available");
+                        resultTextView.setText("Failed to fetch user data");
                     }
-                } else {
-                    resultTextView.setText("Failed to fetch user data");
                 }
-            }
-        });
+            });
+        } else {
+            resultTextView.setText("User is not logged in");
+        }
     }
+
 }
