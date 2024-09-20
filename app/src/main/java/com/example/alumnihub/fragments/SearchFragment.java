@@ -1,10 +1,9 @@
-// SearchFragment.java
 package com.example.alumnihub.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.alumnihub.R;
+import com.example.alumnihub.activities.ProfileViewActivity;
 import com.example.alumnihub.adapters.SearchUserAdapter;
 import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
 import com.example.alumnihub.data_models.User;
@@ -44,12 +44,10 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView);
         searchFragmentBgLogo = view.findViewById(R.id.searchFragmentBackgroundLogo);
 
-        // Add a TextWatcher to the AutoCompleteTextView to handle text changes
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -77,7 +75,8 @@ public class SearchFragment extends Fragment {
         // Set an item click listener to handle user selection from suggestions
         autoCompleteTextView.setOnItemClickListener((parent, view1, position, id) -> {
             User selectedUser = (User) parent.getItemAtPosition(position);
-            fetchAndPassUser(selectedUser.getUserName());
+            // Navigate to ProfileViewActivity
+            fetchAndPassUser(selectedUser.getUserId());
         });
 
         return view;
@@ -109,24 +108,19 @@ public class SearchFragment extends Fragment {
                 });
     }
 
-    private void fetchAndPassUser(String username) {
-        userServicesDB.getUserByUsername(username)
+    private void fetchAndPassUser(String userId) {
+        userServicesDB.getUser(userId)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         User user = task.getResult();
                         if (user != null) {
-                            // Pass the user details to the ProfileViewFragment
-                            ProfileViewFragment profileViewFragment = ProfileViewFragment.newInstance(user);
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.every_content_position, profileViewFragment); // Use every_content_position instead of fragment_container
-                            transaction.addToBackStack(null);
-                            transaction.commit();
+                            Intent intent = new Intent(getContext(), ProfileViewActivity.class);
+                            intent.putExtra("selectedUser", user);
+                            startActivity(intent);
                         } else {
-                            // Handle user not found
                             showToast("User not found.");
                         }
                     } else {
-                        // Handle the error
                         Log.e("SearchFragment", "Error fetching user", task.getException());
                         showToast("Error fetching user.");
                     }
