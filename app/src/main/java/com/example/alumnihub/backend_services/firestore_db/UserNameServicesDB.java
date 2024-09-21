@@ -37,7 +37,7 @@ public class UserNameServicesDB {
      * @param username The username to be added.
      * @return A Task representing the asynchronous operation.
      */
-    public Task<Void> addUsername(String username) {
+     public Task<Void> addUsername(String username) {
         Log.d(TAG, "Adding username: " + username);
 
         // Reference to the "user_names" collection with the username as the document ID
