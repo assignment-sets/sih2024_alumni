@@ -24,7 +24,7 @@ public class ProfileViewFragment extends Fragment {
     private static final String ARG_USER = "user";
     private User user;
     private UserServicesDB userServicesDB;
-    private TextView resultTextView;
+    private TextView userAccountName, userFullName, userEnrollmentNo, userEmail, userType, userGradYear;
 
     public ProfileViewFragment() {
         // Required empty public constructor
@@ -57,20 +57,27 @@ public class ProfileViewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        resultTextView = view.findViewById(R.id.sampleTextView);
+        userAccountName = view.findViewById(R.id.user_account_name);
+        userFullName = view.findViewById(R.id.user_full_name);
+        userEnrollmentNo = view.findViewById(R.id.user_enrollment_no);
+        userEmail = view.findViewById(R.id.user_email);
+        userType = view.findViewById(R.id.user_type);
+        userGradYear = view.findViewById(R.id.user_graduation_year);
 
         if (user != null) {
             displayUserDetails(user);
         } else {
-            fetchCurrentUser();
+//            fetchCurrentUser();
         }
     }
 
     private void displayUserDetails(User user) {
-        String userDetails = "Username: " + user.getUserName() + "\n" +
-                "Email: " + user.getEmail() + "\n" +
-                "Full Name: " + user.getFullName();
-        resultTextView.setText(userDetails);
+        userAccountName.setText(user.getUserName());
+        userFullName.setText(user.getFullName());
+        userEnrollmentNo.setText(user.getEnrollmentNum());
+        userEmail.setText(user.getEmail());
+        userType.setText(user.getType());
+        userGradYear.setText(user.getGraduationYear());
     }
 
 //    private void fetchCurrentUser() {
@@ -92,28 +99,28 @@ public class ProfileViewFragment extends Fragment {
 //        });
 //    }  it is the main code but for testing i replace it
 
-    private void fetchCurrentUser() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            String currentUserId = auth.getCurrentUser().getUid();
-            userServicesDB.getUser(currentUserId).addOnCompleteListener(new OnCompleteListener<User>() {
-                @Override
-                public void onComplete(@NonNull Task<User> task) {
-                    if (task.isSuccessful()) {
-                        User user = task.getResult();
-                        if (user != null) {
-                            displayUserDetails(user);
-                        } else {
-                            resultTextView.setText("No user data available");
-                        }
-                    } else {
-                        resultTextView.setText("Failed to fetch user data");
-                    }
-                }
-            });
-        } else {
-            resultTextView.setText("User is not logged in");
-        }
-    }
+//    private void fetchCurrentUser() {
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        if (auth.getCurrentUser() != null) {
+//            String currentUserId = auth.getCurrentUser().getUid();
+//            userServicesDB.getUser(currentUserId).addOnCompleteListener(new OnCompleteListener<User>() {
+//                @Override
+//                public void onComplete(@NonNull Task<User> task) {
+//                    if (task.isSuccessful()) {
+//                        User user = task.getResult();
+//                        if (user != null) {
+//                            displayUserDetails(user);
+//                        } else {
+//                            resultTextView.setText("No user data available");
+//                        }
+//                    } else {
+//                        resultTextView.setText("Failed to fetch user data");
+//                    }
+//                }
+//            });
+//        } else {
+//            resultTextView.setText("User is not logged in");
+//        }
+//    }
 
 }

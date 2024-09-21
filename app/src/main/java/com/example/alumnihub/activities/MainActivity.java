@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
-                if(menuItem.getItemId() == R.id.chat){
+                if (menuItem.getItemId() == R.id.chat) {
                     fragmentTransaction1.replace(R.id.every_content_position, new CommunityChatFragment());
                     fragmentTransaction1.addToBackStack(null);
                 } else if (menuItem.getItemId() == R.id.study_material) {
@@ -67,17 +67,20 @@ public class MainActivity extends AppCompatActivity {
                 } else if (menuItem.getItemId() == R.id.search_account) {
                     fragmentTransaction1.replace(R.id.every_content_position, new SearchFragment());
                     fragmentTransaction1.addToBackStack(null);
-                }else if (menuItem.getItemId() == R.id.posts) {
+                } else if (menuItem.getItemId() == R.id.posts) {
                     fragmentTransaction1.replace(R.id.every_content_position, new PostsFragment());
                     fragmentTransaction1.addToBackStack(null);
                 } else if (menuItem.getItemId() == R.id.profile) {
-                    fragmentTransaction1.replace(R.id.every_content_position, new ProfileViewFragment());
-                    fragmentTransaction1.addToBackStack(null);
+                    // Start ProfileViewActivity when profile is selected
+                    Intent intent = new Intent(MainActivity.this, ProfileViewActivity.class);
+                    startActivity(intent);
+                    return true; // Return here
                 }
                 fragmentTransaction1.commit();
                 return true;
             }
         });
+
     }
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {

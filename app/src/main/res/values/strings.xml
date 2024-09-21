@@ -25,4 +25,5 @@
     <string name="event_posts">Event Posts</string>
     <string name="posts_caption">Caption</string>
     <string name="job_post_form">Post Job Opening</string>
+    <string name="edit_user_data">Edit Info</string>
 </resources>
