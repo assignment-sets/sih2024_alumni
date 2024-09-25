@@ -15,11 +15,13 @@ public class Chat {
     public Chat() {
     }
 
-    public Chat(String chat_message_id, String user_id, String chat_message_text) {
+    public Chat(String chat_message_id, String user_id, String chat_message_text, String pfp_pic_url, String user_name) {
         this.chat_message_id = chat_message_id;
         this.user_id = user_id;
         this.chat_message_text = chat_message_text;
         this.createdAt = new Date();
+        this.pfp_pic_url = pfp_pic_url;
+        this.user_name = user_name;
     }
     @PropertyName("msg_id")
     public String getChat_message_id() {

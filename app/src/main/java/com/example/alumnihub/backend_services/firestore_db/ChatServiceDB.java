@@ -1,5 +1,7 @@
 package com.example.alumnihub.backend_services.firestore_db;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.alumnihub.data_models.Chat;
@@ -16,6 +18,10 @@ public class ChatServiceDB {
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private static final String COLLECTION_NAME = "chats";
 
+    public String generateUniqueChatMessageId() {
+        return "CM" + firebaseFirestore.collection("chats").document().getId();
+    }
+
     public Task<Void> addMessage(Chat chat){
         // add new message by using this method
         String chatMessageId = chat.getChat_message_id();
@@ -23,25 +29,34 @@ public class ChatServiceDB {
         return documentReference.set(chat).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-
+                Log.d("ChatAdd", "onSuccess: ");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                Log.d("ChatAdd", "onFailure: ");
             }
         });
     }
 
-    public Task<List<Chat>> getAllChatMessage(){
-        // get All the chat messages by using this method
-        return firebaseFirestore.collection(COLLECTION_NAME).get().continueWith(task -> {
-            if(task.isSuccessful()){
-                QuerySnapshot querySnapshot = task.getResult();
-                return querySnapshot.toObjects(Chat.class);
-            }else {
-                throw task.getException();
-            }
-        });
+    public void getChatMessagesInRealTime(OnChatMessagesChangeListener listener) {
+        firebaseFirestore.collection(COLLECTION_NAME)
+                .orderBy("created_at")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.d("ChatService", "error fetching chat messages , do something ");
+                        listener.onError(error);
+                        return;
+                    }
+                    if (value != null && !value.isEmpty()) {
+                        List<Chat> chatList = value.toObjects(Chat.class);
+                        Log.d("ChatAdd", "getChatMessagesInRealTime: "+ chatList.get(0).toString());
+                        listener.onChatMessagesChanged(chatList);
+                    }
+                });
+    }
+    public interface OnChatMessagesChangeListener {
+        void onChatMessagesChanged(List<Chat> chatList);
+        void onError(Exception e);
     }
 }
