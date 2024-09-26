@@ -10,14 +10,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.alumnihub.R;
-import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
-import com.example.alumnihub.data_models.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.alumnihub.backend_services.firestore_db.ChatServiceDB;
+import com.example.alumnihub.data_models.Chat;
+
+import java.util.List;
 
 public class TestScreen extends AppCompatActivity {
 
-    private UserServicesDB userServicesDB;
+    private ChatServiceDB chatServiceDB;
     private TextView resultTextView;
 
     @Override
@@ -32,18 +32,23 @@ public class TestScreen extends AppCompatActivity {
         });
 
         resultTextView = findViewById(R.id.sampleTextView);
-        userServicesDB = new UserServicesDB();
+        chatServiceDB = new ChatServiceDB();
 
-        // Retrieve the User object from the Intent
-        User user = (User) getIntent().getSerializableExtra("user");
-        if (user != null) {
-            // Display the User details in the TextView
-            String userDetails = "Username: " + user.getUserName() + "\n" +
-                    "Email: " + user.getEmail() + "\n" +
-                    "Full Name: " + user.getFullName();
-            resultTextView.setText(userDetails);
-        } else {
-            resultTextView.setText("No user data available");
-        }
+        // Fetch chat messages in real-time and display them
+        chatServiceDB.getChatMessagesInRealTime(new ChatServiceDB.OnChatMessagesChangeListener() {
+            @Override
+            public void onChatMessagesChanged(List<Chat> chatList) {
+                StringBuilder chatMessages = new StringBuilder();
+                for (Chat chat : chatList) {
+                    chatMessages.append(chat.getUser_name()).append(": ").append(chat.getChat_message_text()).append("\n");
+                }
+                resultTextView.setText(chatMessages.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                resultTextView.setText("Error fetching chat messages: " + e.getMessage());
+            }
+        });
     }
 }

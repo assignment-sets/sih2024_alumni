@@ -53,7 +53,6 @@ public class CommunityChatFragment extends Fragment {
     private ChatBubbleAdapter chatBubbleAdapter;
     private List<Chat> chatList = new ArrayList<>();
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,7 +92,6 @@ public class CommunityChatFragment extends Fragment {
                 }
             }
 
-
             @Override
             public void onError(Exception e) {
                 Log.d("Chat", "onError: Chat messages fetching error" + e.getMessage());
@@ -101,19 +99,18 @@ public class CommunityChatFragment extends Fragment {
         });
     }
 
-
     private void handleChatMessages(String chatMessage) {
         userServicesDB.getUser(firebaseUser.getUid()).addOnSuccessListener(new OnSuccessListener<User>() {
             @Override
             public void onSuccess(User user) {
                 if(user != null){
-                    Chat chat = new Chat();
-                    chat.setUser_id(user.getUserId());
-                    chat.setChat_message_text(chatMessage);
-                    chat.setUser_name(user.getUserName());
-                    chat.setPfp_pic_url(user.getPfPicUrl());
-                    chat.setChat_message_id(chatServiceDB.generateUniqueChatMessageId());
-                    chat.setCreatedAt(new Date());
+                    Chat chat = new Chat(
+                            chatServiceDB.generateUniqueChatMessageId(),
+                            user.getUserId(),
+                            chatMessage,
+                            user.getPfPicUrl(),
+                            user.getUserName()
+                    );
 
                     // chat data model ready successfully bro now push it
                     chatServiceDB.addMessage(chat).addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatServiceDB {
@@ -44,17 +45,19 @@ public class ChatServiceDB {
                 .orderBy("created_at")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.d("ChatService", "error fetching chat messages , do something ");
+                        Log.d("ChatService", "Error fetching chat messages: ", error);
                         listener.onError(error);
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
                         List<Chat> chatList = value.toObjects(Chat.class);
-                        Log.d("ChatAdd", "getChatMessagesInRealTime: "+ chatList.get(0).toString());
                         listener.onChatMessagesChanged(chatList);
+                    } else {
+                        listener.onChatMessagesChanged(new ArrayList<>()); // Return an empty list if no documents are found
                     }
                 });
     }
+
     public interface OnChatMessagesChangeListener {
         void onChatMessagesChanged(List<Chat> chatList);
         void onError(Exception e);
