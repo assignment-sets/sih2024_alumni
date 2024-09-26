@@ -1,8 +1,7 @@
 package com.example.alumnihub.adapters;
 
 import android.content.Context;
-import android.net.Uri;
-import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,76 +11,60 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alumnihub.R;
-import com.example.alumnihub.backend_services.firebase_auth.AuthServices;
-import com.example.alumnihub.backend_services.firebase_storage.StorageServices;
 import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
 import com.example.alumnihub.data_models.Chat;
 import com.example.alumnihub.data_models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-public class ChatBubbleAdapter extends RecyclerView.Adapter<ChatBubbleAdapter.ChatBubbleViewHolder> {
+public class ChatBubbleAdapter extends RecyclerView.Adapter {
     Context context;
     List<Chat> chatList;
     UserServicesDB userServicesDB;
-    StorageServices storageServices;
-    AuthServices authServices = new AuthServices();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser;
+
+    // Cache to store user data and avoid multiple network calls for the same user
+    Map<String, User> userCache = new HashMap<>();
 
     public ChatBubbleAdapter(Context context, List<Chat> chatList) {
         this.context = context;
         this.chatList = chatList;
         this.userServicesDB = new UserServicesDB();
-        this.storageServices = new StorageServices();
+        currentUser = firebaseAuth.getCurrentUser();
     }
 
     @NonNull
     @Override
-    public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == 0){ // show in the right side for logged in user
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == 0) {
             View view = LayoutInflater.from(context).inflate(R.layout.chat_messages_bubble, parent, false);
-            return new ChatBubbleViewHolder(view);
-        }else { // show in left side for other user's messages
+            return new ChatBubbleViewHolderReceiver(view);
+        } else {
             View view = LayoutInflater.from(context).inflate(R.layout.chat_message_left_bubble, parent, false);
-            return new ChatBubbleViewHolder(view);
+            return new ChatBubbleViewHolderSender(view);
         }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Chat chat = chatList.get(position);
-//        storageServices.getDownloadUrl("/profile_pics/"+chat.getUser_id()).addOnCompleteListener(new OnCompleteListener<Uri>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Uri> task) {
-//                if(task.isSuccessful() && task.getResult() != null){
-//                    Uri userPfPic = task.getResult();
-//
-//                    Picasso.get().load(userPfPic.toString()).placeholder(R.drawable.ic_default_user_profile_pic)
-//                            .into(holder.userProfileImage);
-//                }
-//            }
-//        }); // user profile image i will show latter wait 
-        holder.userMessageText.setText(chat.getChat_message_text());
+        if (holder.getClass() == ChatBubbleViewHolderReceiver.class) {
+            ChatBubbleViewHolderReceiver receiver = (ChatBubbleViewHolderReceiver) holder;
+            receiver.userMessageText.setText(chat.getChat_message_text());
+            fetchUserData(chat.getUser_id(), receiver.userName);
 
-        userServicesDB.getUser(chat.getUser_id()).addOnCompleteListener(new OnCompleteListener<User>() {
-            @Override
-            public void onComplete(@NonNull Task<User> task) {
-                if(task.isSuccessful()){
-                    User user = task.getResult();
-                    if(user != null){
-                        holder.userName.setText("Send by "+user.getUserName());
-                    }else {
-                        holder.userName.setText("Send by Anon user");
-                    }
-                }else {
-                    holder.userName.setText("Send by Anon user");
-                }
-            }
-        });
+        } else if (holder.getClass() == ChatBubbleViewHolderSender.class) {
+            ChatBubbleViewHolderSender sender = (ChatBubbleViewHolderSender) holder;
+            sender.userMessageText.setText(chat.getChat_message_text());
+            fetchUserData(chat.getUser_id(), sender.userName);
+        }
     }
 
     @Override
@@ -91,16 +74,48 @@ public class ChatBubbleAdapter extends RecyclerView.Adapter<ChatBubbleAdapter.Ch
 
     @Override
     public int getItemViewType(int position) {
-        return chatList.get(position).getUser_id().equals(authServices.getCurrentUser().getUid()) ? 0 : 1;
+        Chat chat = chatList.get(position);
+        Log.d("ChatID", "getItemViewType: " + chat.getUser_id());
+        return chat.getUser_id().equals(currentUser.getUid().toString()) ? 0 : 1;
     }
 
-    public class ChatBubbleViewHolder extends RecyclerView.ViewHolder{
-        private CircleImageView userProfileImage;
+    private void fetchUserData(String userId, TextView usernameTextView) {
+        if (userCache.containsKey(userId)) {
+            User user = userCache.get(userId);
+            usernameTextView.setText("Sent by " + (user != null ? user.getUserName() : "Anon user"));
+        } else {
+            userServicesDB.getUser(userId).addOnCompleteListener(new OnCompleteListener<User>() {
+                @Override
+                public void onComplete(@NonNull Task<User> task) {
+                    if (task.isSuccessful()) {
+                        User user = task.getResult();
+                        userCache.put(userId, user);
+                        usernameTextView.setText("Sent by " + (user != null ? user.getUserName() : "Anon user"));
+                    } else {
+                        usernameTextView.setText("Sent by Anon user");
+                    }
+                }
+            });
+        }
+    }
+
+    public class ChatBubbleViewHolderReceiver extends RecyclerView.ViewHolder {
         private TextView userMessageText;
         private TextView userName;
-        public ChatBubbleViewHolder(@NonNull View itemView) {
+
+        public ChatBubbleViewHolderReceiver(@NonNull View itemView) {
             super(itemView);
-            userProfileImage = itemView.findViewById(R.id.userProfileImage);
+            userMessageText = itemView.findViewById(R.id.chatMessageText);
+            userName = itemView.findViewById(R.id.usernameText);
+        }
+    }
+
+    public class ChatBubbleViewHolderSender extends RecyclerView.ViewHolder {
+        private TextView userMessageText;
+        private TextView userName;
+
+        public ChatBubbleViewHolderSender(@NonNull View itemView) {
+            super(itemView);
             userMessageText = itemView.findViewById(R.id.chatMessageText);
             userName = itemView.findViewById(R.id.usernameText);
         }

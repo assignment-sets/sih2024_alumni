@@ -16,16 +16,16 @@
         android:orientation="vertical"
         android:padding="10dp"
         android:background="@color/darkBlue"
-        android:gravity="center_horizontal">
+        android:gravity="end">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/userProfileImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="end"
-            android:visibility="gone"
-            android:layout_marginBottom="8dp"
-            tools:ignore="ContentDescription" />
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/userProfileImage"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:visibility="gone"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            tools:ignore="ContentDescription" />-->
 
         <TextView
             android:id="@+id/chatMessageText"
@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:text="This is a sample message."
             android:textColor="@android:color/white"
+            android:padding="10dp"
             android:textSize="16sp"
             android:layout_marginBottom="8dp"
             tools:ignore="HardcodedText" />
@@ -42,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Username"
+            android:padding="10dp"
             android:textColor="@android:color/white"
             android:textSize="13sp"
             android:layout_gravity="end" />

@@ -79,24 +79,21 @@ public class CommunityChatFragment extends Fragment {
     }
 
     private void fetchAllChatMessages() {
-        chatServiceDB.getChatMessagesInRealTime(new ChatServiceDB.OnChatMessagesChangeListener() {
+        chatServiceDB.fetchAllChatMessages(new ChatServiceDB.OnChatMessagesFetchedListener() {
             @Override
-            public void onChatMessagesChanged(List<Chat> chats) {
-                if (chats != null && !chats.isEmpty()) {
+            public void onChatMessagesFetched(List<Chat> chatMessages) {
+                if(chatMessages != null && !chatMessages.isEmpty()){
                     chatList.clear();
-                    chatList.addAll(chats);
+                    chatList.addAll(chatMessages);
+
                     chatBubbleAdapter.notifyDataSetChanged();
 
-                    if (!chatList.isEmpty()) {
-                        chatMessagesRecyclerView.scrollToPosition(chatList.size() - 1);
+                    if(!chatMessages.isEmpty()){
+                        chatMessagesRecyclerView.scrollToPosition(chatMessages.size() - 1);
                     }
+                }else {
+                    Log.d("ChatFragment", "onChatMessagesFetched: empty found");
                 }
-            }
-
-
-            @Override
-            public void onError(Exception e) {
-                Log.d("Chat", "onError: Chat messages fetching error" + e.getMessage());
             }
         });
     }
