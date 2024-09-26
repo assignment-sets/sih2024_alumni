@@ -35,10 +35,12 @@ public class CommunityChatFragment extends Fragment {
     public CommunityChatFragment() {
         // Required empty public constructor
     }
+
     FirebaseUser firebaseUser;
     AuthServices authServices = new AuthServices();
-    private  ChatServiceDB chatServiceDB;
+    private ChatServiceDB chatServiceDB;
     private UserServicesDB userServicesDB;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +70,7 @@ public class CommunityChatFragment extends Fragment {
 
         sendMsgBtn.setOnClickListener(v -> {
             String chatMessage = chatMessageEnter.getText().toString();
-            if(!chatMessage.isEmpty()){
+            if (!chatMessage.isEmpty()) {
                 handleChatMessages(chatMessage);
                 chatMessageEnter.setText("");
             }
@@ -82,16 +84,16 @@ public class CommunityChatFragment extends Fragment {
         chatServiceDB.fetchAllChatMessages(new ChatServiceDB.OnChatMessagesFetchedListener() {
             @Override
             public void onChatMessagesFetched(List<Chat> chatMessages) {
-                if(chatMessages != null && !chatMessages.isEmpty()){
+                if (chatMessages != null && !chatMessages.isEmpty()) {
                     chatList.clear();
                     chatList.addAll(chatMessages);
 
                     chatBubbleAdapter.notifyDataSetChanged();
 
-                    if(!chatMessages.isEmpty()){
+                    if (!chatMessages.isEmpty()) {
                         chatMessagesRecyclerView.scrollToPosition(chatMessages.size() - 1);
                     }
-                }else {
+                } else {
                     Log.d("ChatFragment", "onChatMessagesFetched: empty found");
                 }
             }
@@ -103,14 +105,14 @@ public class CommunityChatFragment extends Fragment {
         userServicesDB.getUser(firebaseUser.getUid()).addOnSuccessListener(new OnSuccessListener<User>() {
             @Override
             public void onSuccess(User user) {
-                if(user != null){
-                    Chat chat = new Chat();
-                    chat.setUser_id(user.getUserId());
-                    chat.setChat_message_text(chatMessage);
-                    chat.setUser_name(user.getUserName());
-                    chat.setPfp_pic_url(user.getPfPicUrl());
-                    chat.setChat_message_id(chatServiceDB.generateUniqueChatMessageId());
-                    chat.setCreatedAt(new Date());
+                if (user != null) {
+                    Chat chat = new Chat(
+                            chatServiceDB.generateUniqueChatMessageId(),
+                            user.getUserId(),
+                            chatMessage,
+                            user.getPfPicUrl(),
+                            user.getUserName()
+                    );
 
                     // chat data model ready successfully bro now push it
                     chatServiceDB.addMessage(chat).addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -23,7 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChatBubbleAdapter extends RecyclerView.Adapter {
+public class ChatBubbleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VIEW_TYPE_SENDER = 0;
+    private static final int VIEW_TYPE_RECEIVER = 1;
+
     Context context;
     List<Chat> chatList;
     UserServicesDB userServicesDB;
@@ -43,27 +46,26 @@ public class ChatBubbleAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == 0) {
+        if (viewType == VIEW_TYPE_SENDER) {
             View view = LayoutInflater.from(context).inflate(R.layout.chat_messages_bubble, parent, false);
-            return new ChatBubbleViewHolderReceiver(view);
+            return new ChatBubbleViewHolderSender(view);
         } else {
             View view = LayoutInflater.from(context).inflate(R.layout.chat_message_left_bubble, parent, false);
-            return new ChatBubbleViewHolderSender(view);
+            return new ChatBubbleViewHolderReceiver(view);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Chat chat = chatList.get(position);
-        if (holder.getClass() == ChatBubbleViewHolderReceiver.class) {
-            ChatBubbleViewHolderReceiver receiver = (ChatBubbleViewHolderReceiver) holder;
-            receiver.userMessageText.setText(chat.getChat_message_text());
-            fetchUserData(chat.getUser_id(), receiver.userName);
-
-        } else if (holder.getClass() == ChatBubbleViewHolderSender.class) {
+        if (holder.getItemViewType() == VIEW_TYPE_SENDER) {
             ChatBubbleViewHolderSender sender = (ChatBubbleViewHolderSender) holder;
             sender.userMessageText.setText(chat.getChat_message_text());
             fetchUserData(chat.getUser_id(), sender.userName);
+        } else {
+            ChatBubbleViewHolderReceiver receiver = (ChatBubbleViewHolderReceiver) holder;
+            receiver.userMessageText.setText(chat.getChat_message_text());
+            fetchUserData(chat.getUser_id(), receiver.userName);
         }
     }
 
@@ -75,8 +77,7 @@ public class ChatBubbleAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemViewType(int position) {
         Chat chat = chatList.get(position);
-        Log.d("ChatID", "getItemViewType: " + chat.getUser_id());
-        return chat.getUser_id().equals(currentUser.getUid().toString()) ? 0 : 1;
+        return chat.getUser_id().equals(currentUser.getUid()) ? VIEW_TYPE_SENDER : VIEW_TYPE_RECEIVER;
     }
 
     private void fetchUserData(String userId, TextView usernameTextView) {
