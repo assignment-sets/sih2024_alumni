@@ -62,10 +62,12 @@ public class MainActivity extends AppCompatActivity {
                 if (menuItem.getItemId() == R.id.chat) {
                     fragmentTransaction1.replace(R.id.every_content_position, new CommunityChatFragment());
                     fragmentTransaction1.addToBackStack(null);
-                } else if (menuItem.getItemId() == R.id.study_material) {
-                    fragmentTransaction1.replace(R.id.every_content_position, new MaterialShareFragment());
-                    fragmentTransaction1.addToBackStack(null);
-                } else if (menuItem.getItemId() == R.id.search_account) {
+                }
+//                else if (menuItem.getItemId() == R.id.study_material) {
+//                    fragmentTransaction1.replace(R.id.every_content_position, new MaterialShareFragment());
+//                    fragmentTransaction1.addToBackStack(null);
+//                }
+                else if (menuItem.getItemId() == R.id.search_account) {
                     fragmentTransaction1.replace(R.id.every_content_position, new SearchFragment());
                     fragmentTransaction1.addToBackStack(null);
                 } else if (menuItem.getItemId() == R.id.posts) {

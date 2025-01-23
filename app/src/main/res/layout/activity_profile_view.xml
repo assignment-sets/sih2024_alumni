@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     tools:context=".activities.ProfileViewActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="5dp"
+        app:title="Profile"
+        app:titleTextColor="@color/white"
+        />
 
     <ScrollView
         android:layout_width="match_parent"

@@ -1,7 +1,12 @@
 package com.example.alumnihub.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,12 +16,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.alumnihub.R;
+import com.example.alumnihub.backend_services.firebase_auth.AuthServices;
 import com.example.alumnihub.backend_services.firebase_storage.StorageServices;
 import com.example.alumnihub.backend_services.firestore_db.UserServicesDB;
 import com.example.alumnihub.data_models.User;
@@ -36,6 +43,8 @@ public class ProfileViewActivity extends AppCompatActivity {
     private TextView userAccountName, userFullName, userEnrollmentNo, userEmail, userType, userGradYear;
     private CircleImageView circleImageView;
     private StorageServices storageServices;
+    private Toolbar toolbar;
+    private AuthServices authServices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +67,12 @@ public class ProfileViewActivity extends AppCompatActivity {
         userGradYear = findViewById(R.id.user_graduation_year);
         circleImageView = findViewById(R.id.profile_image);
         editUserInfoBtn = findViewById(R.id.edit_user_data);
+        toolbar = findViewById(R.id.toolbar);
 
+        setSupportActionBar(toolbar);
         userServicesDB = new UserServicesDB();
         storageServices = new StorageServices();
+        authServices = new AuthServices();
 
         if (getIntent().hasExtra("selectedUser")) {
             User user = (User) getIntent().getSerializableExtra("selectedUser");
@@ -69,6 +81,39 @@ public class ProfileViewActivity extends AppCompatActivity {
             fetchCurrentUser(); // jodi ProfileActivity ta click kora user er data dakhi tahola currently LoggedIn user dakhabo
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.action_sign_out){
+            showSignOutDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showSignOutDialog() {
+        new AlertDialog.Builder(this).setTitle("Sign Out")
+                .setMessage("Are you sure you want to sign out?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    Toast.makeText(this, "Signing Out....", Toast.LENGTH_SHORT).show();
+                    // sign out logic using firebase
+                    authServices.signOut();
+                    showToast("User successfully signed out");
+                    startActivity(new Intent(ProfileViewActivity.this, LoginScreen.class));
+                    finish();
+
+                    dialog.dismiss();
+                }).setNegativeButton("No", (dialog, which) -> {
+                    dialog.dismiss();
+                }).setCancelable(true).show();
+    }
+
 
     private void displayUserDetails(User user) {
         userAccountName.setText(user.getUserName());
